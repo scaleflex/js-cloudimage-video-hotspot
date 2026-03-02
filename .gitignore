@@ -6,3 +6,14 @@ dist-demo/
 coverage/
 *.local
 .DS_Store
+
+# Yarn PnP
+.pnp.cjs
+.pnp.loader.mjs
+.yarn/
+
+# Large media files
+*.mp4
+
+# Experimental packages
+packages/
