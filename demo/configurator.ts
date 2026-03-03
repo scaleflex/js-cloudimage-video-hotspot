@@ -133,12 +133,12 @@ export function initConfigurator(): void {
     el.addEventListener('change', rebuild),
   );
 
-  // Copy button
+  // Copy button (icon-style .demo-copy-btn)
   cfgCopy.addEventListener('click', () => {
     navigator.clipboard.writeText(cfgCode.textContent || '').then(() => {
-      cfgCopy.textContent = 'Copied!';
+      cfgCopy.classList.add('copied');
       setTimeout(() => {
-        cfgCopy.textContent = 'Copy to Clipboard';
+        cfgCopy.classList.remove('copied');
       }, 2000);
     });
   });

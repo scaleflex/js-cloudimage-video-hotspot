@@ -288,11 +288,11 @@ player.goToChapter('features');</code></pre>
           <p>Toggle options and see the generated code update in real time.</p>
         </div>
         <div class="demo-configurator demo-reveal">
-          <div class="demo-configurator-preview demo-card">
+          <div class="demo-configurator-preview demo-configurator-panel">
             <h3>Preview</h3>
             <div id="configurator-viewer" class="demo-viewer"></div>
           </div>
-          <div class="demo-configurator-panel demo-card">
+          <div class="demo-configurator-panel">
             <h3>Options</h3>
             <div class="demo-configurator-controls">
               <label class="demo-toggle">
@@ -373,9 +373,16 @@ player.goToChapter('features');</code></pre>
                 </select>
               </label>
             </div>
+          </div>
+          <div class="demo-configurator-panel demo-configurator-code">
             <h3>Generated Code</h3>
-            <pre id="cfg-code"><code></code></pre>
-            <button id="cfg-copy" class="demo-btn demo-btn--primary demo-btn--small">Copy to Clipboard</button>
+            <div class="demo-code-wrap">
+              <pre id="cfg-code"><code></code></pre>
+              <button id="cfg-copy" class="demo-copy-btn" aria-label="Copy to clipboard">
+                <svg class="demo-copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                <svg class="demo-check-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -421,16 +428,20 @@ player.goToChapter('features');</code></pre>
             </div>
           </div>
           <div class="demo-also-visual">
-            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="demo-also-icon">
-              <rect x="4" y="4" width="112" height="112" rx="8" stroke="url(#also-grad-0)" stroke-width="2" opacity="0.3"/>
-              <rect x="20" y="20" width="80" height="80" rx="4" stroke="url(#also-grad-0)" stroke-width="1" opacity="0.15"/>
-              <circle cx="45" cy="50" r="6" fill="url(#also-grad-0)" opacity="0.6"/>
-              <circle cx="75" cy="40" r="6" fill="url(#also-grad-0)" opacity="0.6"/>
-              <circle cx="60" cy="70" r="6" fill="url(#also-grad-0)" opacity="0.6"/>
-              <circle cx="45" cy="50" r="10" stroke="url(#also-grad-0)" stroke-width="1.5" opacity="0.3"/>
-              <circle cx="75" cy="40" r="10" stroke="url(#also-grad-0)" stroke-width="1.5" opacity="0.3"/>
-              <circle cx="60" cy="70" r="10" stroke="url(#also-grad-0)" stroke-width="1.5" opacity="0.3"/>
-              <defs><linearGradient id="also-grad-0" x1="0" y1="0" x2="120" y2="120"><stop stop-color="#2c99ff"/><stop offset="1" stop-color="#00d4aa"/></linearGradient></defs>
+            <svg viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg" class="demo-also-icon">
+              <rect x="4" y="4" width="172" height="172" rx="8" stroke="url(#also-grad-0)" stroke-width="2" opacity="0.3"/>
+              <rect x="10" y="10" width="160" height="160" rx="4" stroke="url(#also-grad-0)" stroke-width="1" opacity="0.12"/>
+              <path d="M10 140 L40 110 L65 125 L100 85 L135 110 L170 90 L170 170 L10 170 Z" fill="url(#also-grad-0)" opacity="0.06"/>
+              <circle cx="45" cy="60" r="14" stroke="url(#also-grad-0)" stroke-width="1" opacity="0.15"><animate attributeName="r" values="14;18;14" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.15;0.05;0.15" dur="3s" repeatCount="indefinite"/></circle>
+              <circle cx="45" cy="60" r="8" fill="url(#also-grad-0)" opacity="0.6"/><circle cx="45" cy="60" r="3" fill="#fff" opacity="0.9"/>
+              <circle cx="110" cy="50" r="14" stroke="url(#also-grad-0)" stroke-width="1" opacity="0.15"><animate attributeName="r" values="14;18;14" dur="3s" begin="0.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.15;0.05;0.15" dur="3s" begin="0.5s" repeatCount="indefinite"/></circle>
+              <circle cx="110" cy="50" r="8" fill="url(#also-grad-0)" opacity="0.6"/><circle cx="110" cy="50" r="3" fill="#fff" opacity="0.9"/>
+              <circle cx="140" cy="90" r="14" stroke="url(#also-grad-0)" stroke-width="1" opacity="0.15"><animate attributeName="r" values="14;18;14" dur="3s" begin="1s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.15;0.05;0.15" dur="3s" begin="1s" repeatCount="indefinite"/></circle>
+              <circle cx="140" cy="90" r="8" fill="url(#also-grad-0)" opacity="0.6"/><circle cx="140" cy="90" r="3" fill="#fff" opacity="0.9"/>
+              <rect x="120" y="14" width="50" height="20" rx="4" fill="url(#also-grad-0)" opacity="0.1" stroke="url(#also-grad-0)" stroke-width="1" stroke-opacity="0.25"/>
+              <line x1="128" y1="22" x2="158" y2="22" stroke="url(#also-grad-0)" stroke-width="2" opacity="0.25" stroke-linecap="round"/>
+              <line x1="128" y1="28" x2="148" y2="28" stroke="url(#also-grad-0)" stroke-width="1.5" opacity="0.15" stroke-linecap="round"/>
+              <defs><linearGradient id="also-grad-0" x1="0" y1="0" x2="180" y2="180"><stop stop-color="#2c99ff"/><stop offset="1" stop-color="#00d4aa"/></linearGradient></defs>
             </svg>
           </div>
         </div>
@@ -462,6 +473,39 @@ player.goToChapter('features');</code></pre>
               <path d="M75 55 L85 60 L75 65" stroke="url(#also-grad-1)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
               <path d="M45 55 L35 60 L45 65" stroke="url(#also-grad-1)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
               <defs><linearGradient id="also-grad-1" x1="0" y1="0" x2="120" y2="120"><stop stop-color="#2c99ff"/><stop offset="1" stop-color="#00d4aa"/></linearGradient></defs>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="demo-also-slide" data-slide="2">
+        <div class="demo-also-inner">
+          <div class="demo-also-content">
+            <div class="demo-section-label">Also by Scaleflex</div>
+            <h3 class="demo-also-title">js-cloudimage-<span class="demo-gradient-text">before-after</span></h3>
+            <p class="demo-also-desc">Beautiful before/after image comparison slider with touch support, smooth animations, and responsive design.</p>
+            <div class="demo-also-actions">
+              <a href="https://scaleflex.github.io/js-cloudimage-before-after/" class="demo-btn demo-btn--primary demo-btn--small" target="_blank" rel="noopener">
+                Live Demo
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+              <a href="https://github.com/scaleflex/js-cloudimage-before-after" class="demo-btn demo-btn--outline demo-btn--small" target="_blank" rel="noopener">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                GitHub
+              </a>
+            </div>
+          </div>
+          <div class="demo-also-visual">
+            <svg viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg" class="demo-also-icon">
+              <rect x="4" y="4" width="172" height="172" rx="8" stroke="url(#also-grad-2)" stroke-width="2" opacity="0.3"/>
+              <rect x="10" y="30" width="160" height="120" rx="4" stroke="url(#also-grad-2)" stroke-width="1" opacity="0.12"/>
+              <rect x="10" y="30" width="80" height="120" fill="url(#also-grad-2)" opacity="0.06"/>
+              <line x1="90" y1="30" x2="90" y2="150" stroke="url(#also-grad-2)" stroke-width="2" opacity="0.5"/>
+              <circle cx="90" cy="90" r="12" fill="url(#also-grad-2)" opacity="0.3" stroke="url(#also-grad-2)" stroke-width="2" stroke-opacity="0.6"/>
+              <path d="M84 87 L80 90 L84 93" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+              <path d="M96 87 L100 90 L96 93" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+              <text x="50" y="24" fill="url(#also-grad-2)" font-size="11" font-weight="600" text-anchor="middle" opacity="0.4">Before</text>
+              <text x="130" y="24" fill="url(#also-grad-2)" font-size="11" font-weight="600" text-anchor="middle" opacity="0.4">After</text>
+              <defs><linearGradient id="also-grad-2" x1="0" y1="0" x2="180" y2="180"><stop stop-color="#2c99ff"/><stop offset="1" stop-color="#00d4aa"/></linearGradient></defs>
             </svg>
           </div>
         </div>
