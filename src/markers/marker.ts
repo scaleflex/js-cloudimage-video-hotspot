@@ -6,6 +6,7 @@ export function createMarker(
   hotspot: NormalizedVideoHotspot,
   pulse: boolean,
   renderMarker?: (hotspot: VideoHotspotItem) => string | HTMLElement,
+  index?: number,
 ): HTMLButtonElement {
   const marker = createElement('button', 'ci-video-hotspot-marker', {
     'aria-label': hotspot.label,
@@ -51,6 +52,7 @@ export function createMarker(
 
   if (hotspot.markerStyle === 'numbered') {
     addClass(marker, 'ci-video-hotspot-marker--numbered');
+    marker.textContent = String(index != null ? index + 1 : 1);
   }
 
   return marker;

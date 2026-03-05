@@ -16,6 +16,9 @@ export type HotspotAnimation = 'fade' | 'scale' | 'none';
 /** Easing function for keyframe interpolation */
 export type EasingFunction = 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out';
 
+/** Interpolation mode between keyframes */
+export type InterpolationMode = 'linear' | 'catmull-rom';
+
 /** Timeline indicator style for hotspots on the progress bar */
 export type TimelineIndicatorStyle = 'dot' | 'range' | 'none';
 
@@ -182,6 +185,8 @@ export interface VideoHotspotItem {
   keyframes?: Keyframe[];
   /** Easing function for keyframe interpolation (default: 'linear') */
   easing?: EasingFunction;
+  /** Interpolation mode: 'linear' for straight lines, 'catmull-rom' for smooth curves (default: 'linear') */
+  interpolation?: InterpolationMode;
 
   /** Arbitrary data passed to the popover template */
   data?: PopoverData;

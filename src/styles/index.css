@@ -2,18 +2,18 @@
 
 .ci-video-hotspot-container {
   /* === Marker === */
-  --ci-video-hotspot-marker-size: 28px;
+  --ci-video-hotspot-marker-size: 18px;
   --ci-video-hotspot-marker-color: #ffffff;
-  --ci-video-hotspot-marker-bg: rgba(0, 0, 0, 0.6);
-  --ci-video-hotspot-marker-border-width: 2px;
-  --ci-video-hotspot-marker-border-color: rgba(255, 255, 255, 0.8);
+  --ci-video-hotspot-marker-bg: rgba(0, 0, 0, 0.55);
+  --ci-video-hotspot-marker-border-width: 1.5px;
+  --ci-video-hotspot-marker-border-color: rgba(255, 255, 255, 0.7);
   --ci-video-hotspot-marker-border: var(--ci-video-hotspot-marker-border-width) solid var(--ci-video-hotspot-marker-border-color);
   --ci-video-hotspot-marker-border-radius: 50%;
-  --ci-video-hotspot-marker-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --ci-video-hotspot-marker-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
 
   /* === Marker Pulse Animation === */
   --ci-video-hotspot-pulse-color: rgba(255, 255, 255, 0.3);
-  --ci-video-hotspot-pulse-size: 44px;
+  --ci-video-hotspot-pulse-size: 30px;
   --ci-video-hotspot-pulse-duration: 1.8s;
 
   /* === Popover === */
@@ -156,7 +156,8 @@
 .ci-video-hotspot-video {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* === Overlay (markers layer) === */
@@ -377,6 +378,36 @@
 
 .ci-video-hotspot-popover[data-placement="right"] .ci-video-hotspot-popover-arrow {
   left: calc(var(--ci-video-hotspot-arrow-size) * -1);
+}
+
+/* === Popover Close Button === */
+.ci-video-hotspot-popover-close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--ci-video-hotspot-popover-color);
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 150ms ease, background 150ms ease;
+}
+
+.ci-video-hotspot-popover-close:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.ci-video-hotspot-popover-close svg {
+  display: block;
 }
 
 /* === Popover Content === */

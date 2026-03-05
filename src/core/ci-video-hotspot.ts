@@ -365,7 +365,8 @@ export class CIVideoHotspot implements CIVideoHotspotInstance {
     if (this.markers.has(hotspot.id)) return;
 
     const animation = hotspot.animation || this.config.hotspotAnimation || 'fade';
-    const marker = createMarker(hotspot, this.config.pulse !== false, this.config.renderMarker);
+    const hotspotIndex = this.config.hotspots.findIndex((h) => h.id === hotspot.id);
+    const marker = createMarker(hotspot, this.config.pulse !== false, this.config.renderMarker, hotspotIndex);
     this.markers.set(hotspot.id, marker);
     this.markersEl.appendChild(marker);
 
@@ -690,7 +691,17 @@ export class CIVideoHotspot implements CIVideoHotspotInstance {
   updateHotspot(id: string, updates: Partial<VideoHotspotItem>): void {
     const idx = this.config.hotspots.findIndex((h) => h.id === id);
     if (idx === -1) return;
-    this.config.hotspots[idx] = { ...this.config.hotspots[idx], ...updates };
+
+    // Detect if visual properties changed (require marker re-render)
+    const prev = this.config.hotspots[idx];
+    const visualKeys: (keyof VideoHotspotItem)[] = [
+      'markerStyle', 'trigger', 'placement', 'animation', 'icon', 'className', 'label',
+    ];
+    const needsRerender = this.markers.has(id) && visualKeys.some(
+      (k) => k in updates && updates[k] !== prev[k],
+    );
+
+    this.config.hotspots[idx] = { ...prev, ...updates };
     // Re-normalize
     const h = this.config.hotspots[idx];
     const { x, y } = normalizeToPercent(h.x, h.y);
@@ -701,6 +712,20 @@ export class CIVideoHotspot implements CIVideoHotspotInstance {
     const nh: NormalizedVideoHotspot = { ...h, x, y, keyframes: normalizedKF };
     this.normalizedHotspots.set(id, nh);
     this.timeline.setHotspots(Array.from(this.normalizedHotspots.values()));
+
+    // Re-render visible marker if visual properties changed
+    if (needsRerender) {
+      const oldNh = { ...nh, animation: 'none' as const };
+      this.hideHotspot(oldNh);
+      this.showHotspot(nh);
+
+      // Restore interpolated position (marker was recreated at base x,y)
+      if (nh.keyframes && nh.keyframes.length > 0) {
+        const pos = this.timeline.getPosition(id, this.player.getCurrentTime());
+        const marker = this.markers.get(id);
+        if (pos && marker) updateMarkerPosition(marker, pos.x, pos.y);
+      }
+    }
   }
 
   getVisibleHotspots(): string[] {

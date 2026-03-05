@@ -855,7 +855,7 @@ kbd {
 /* ── Configurator ────────────────────────────────── */
 .demo-configurator {
   display: grid;
-  grid-template-columns: 40fr 60fr;
+  grid-template-columns: 60fr 40fr;
   gap: 24px;
   align-items: stretch;
 }
@@ -913,9 +913,31 @@ kbd {
 
 .demo-configurator-controls {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px 28px;
+  flex-direction: column;
+  gap: 16px;
   margin-bottom: 8px;
+}
+
+.cfg-group {
+  border: 1px solid var(--sf-light-border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  background: #f8fafc;
+}
+
+.cfg-group-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  margin-bottom: 10px;
+}
+
+.cfg-group-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
 }
 
 .demo-toggle {
@@ -1544,7 +1566,7 @@ kbd {
 .app {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 600px;
   position: relative;
 }
 
@@ -1555,17 +1577,138 @@ kbd {
 }
 
 /* === Mode Toggle === */
+/* === Top Bar (editor mode only) === */
+.app-top-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #0f172a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.app-top-bar--hidden {
+  display: none;
+}
+
 .app-mode-toggle {
+  display: flex;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 3px;
+  flex-shrink: 0;
+}
+
+/* Overlay toggle (view mode — floats on video) */
+.app-mode-toggle--overlay {
   position: absolute;
   top: 12px;
   left: 12px;
   z-index: 200;
-  display: flex;
-  gap: 2px;
   background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(8px);
-  border-radius: 8px;
-  padding: 3px;
+}
+
+.app-mode-toggle--overlay.app-mode-toggle--hidden {
+  display: none;
+}
+
+/* === Editor Toolbar (Import/Export/Copy) === */
+.app-editor-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 308px;
+  flex-shrink: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.app-editor-toolbar--hidden {
+  display: none;
+}
+
+/* Video URL input */
+.app-video-url {
+  flex: 1;
+  display: flex;
+  min-width: 0;
+}
+
+.app-video-url--hidden {
+  display: none;
+}
+
+.app-video-url input {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-right: none;
+  border-radius: 6px 0 0 6px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #e2e8f0;
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.app-video-url input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.app-video-url input:focus {
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.app-video-url-btn {
+  padding: 6px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0 6px 6px 0;
+  background: rgba(59, 130, 246, 0.25);
+  color: #93c5fd;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.app-video-url-btn:hover {
+  background: rgba(59, 130, 246, 0.4);
+}
+
+
+.toolbar-btn,
+.toolbar-load-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.toolbar-btn:hover,
+.toolbar-load-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.toolbar-btn--done {
+  color: #4ade80 !important;
 }
 
 .mode-btn {
@@ -1837,7 +1980,46 @@ kbd {
   color: #fca5a5;
 }
 
-/* Point edit fields (shown for selected point) */
+/* Inline fields inside point row (selected point) */
+.point-row-fields {
+  flex: 1;
+  display: flex;
+  gap: 4px;
+  min-width: 0;
+}
+
+.point-row-field {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.point-row-field-label {
+  font-size: 10px;
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.point-row-field-input {
+  width: 100%;
+  min-width: 0;
+  padding: 3px 6px;
+  border: 1px solid #334155;
+  border-radius: 3px;
+  background: #1e293b;
+  color: #e2e8f0;
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+}
+
+.point-row-field-input:focus {
+  border-color: #3b82f6;
+}
+
+/* Legacy point fields (kept for reference) */
 .point-fields {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -1910,6 +2092,65 @@ kbd {
   background: rgba(239, 68, 68, 0.3);
 }
 
+/* === Customize Section === */
+.customize-header {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #1e293b;
+}
+
+.customize-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.customize-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.customize-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.customize-field-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.customize-field-select {
+  appearance: none;
+  background: #1e293b url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2364748b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 8px center;
+  border: 1px solid #334155;
+  border-radius: 4px;
+  color: #e2e8f0;
+  font-size: 12px;
+  padding: 5px 24px 5px 8px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.customize-field-select:hover {
+  border-color: #475569;
+}
+
+.customize-field-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
 /* === Timeline === */
 .app-timeline {
   display: none;
@@ -1957,14 +2198,13 @@ kbd {
   z-index: 3;
 }
 
-/* Keyframe connecting line */
+/* Keyframe range highlight */
 .timeline-kf-line {
   position: absolute;
-  top: 50%;
-  height: 2px;
-  transform: translateY(-50%);
-  opacity: 0.3;
-  border-radius: 1px;
+  top: 0;
+  height: 100%;
+  opacity: 0.15;
+  border-radius: 2px;
   pointer-events: none;
 }
 
@@ -1972,49 +2212,60 @@ kbd {
 .timeline-kf-dot {
   position: absolute;
   top: 50%;
-  width: 10px;
-  height: 10px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   border: none;
   cursor: pointer;
   transform: translate(-50%, -50%);
-  transition: all 0.1s;
+  transition: all 0.15s;
   z-index: 2;
   padding: 0;
+  box-sizing: border-box;
 }
 
 .timeline-kf-dot:hover {
-  transform: translate(-50%, -50%) scale(1.3);
+  transform: translate(-50%, -50%) scale(1.2);
 }
 
-.timeline-kf-dot--hotspot-selected {
+/* Secondary keyframe dots (not selected point) — smaller & lighter */
+.timeline-kf-dot--secondary {
   width: 12px;
   height: 12px;
+  opacity: 0.5;
 }
 
+.timeline-kf-dot--secondary:hover {
+  opacity: 0.85;
+}
+
+/* The actively selected point */
 .timeline-kf-dot--selected {
-  width: 14px;
-  height: 14px;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+  width: 16px;
+  height: 16px;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.4);
+  z-index: 3;
 }
 
 /* View mode start dots */
 .timeline-start-dot {
   position: absolute;
   top: 50%;
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  border: 2px solid #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
   cursor: pointer;
   transform: translate(-50%, -50%);
   transition: all 0.15s;
   padding: 0;
   z-index: 2;
+  box-sizing: border-box;
 }
 
 .timeline-start-dot:hover {
-  transform: translate(-50%, -50%) scale(1.3);
+  transform: translate(-50%, -50%) scale(1.2);
+  border-color: #fff;
 }
 
 /* Playhead */
@@ -2151,4 +2402,126 @@ kbd {
 
 .card-editor-btn--save:hover {
   background: #2563eb;
+}
+
+/* ── Editor Page Layout ─────────────────────────── */
+.editor-page-container {
+  max-width: 1200px;
+  margin: 32px auto;
+  padding: 0 32px;
+}
+
+#editor-root {
+  background: #fff;
+  border-radius: var(--sf-radius);
+  box-shadow: var(--sf-shadow-md);
+  overflow: hidden;
+}
+
+.editor-page-shortcuts {
+  margin-top: 20px;
+  padding: 24px 28px;
+  background: #fff;
+  border-radius: var(--sf-radius);
+  border: 1px solid var(--sf-light-border);
+}
+
+.editor-page-shortcuts h3 {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--sf-text-muted);
+  margin-bottom: 16px;
+}
+
+.editor-page-shortcuts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.editor-page-shortcut {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--sf-text-secondary);
+}
+
+.editor-page-shortcut kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  padding: 3px 8px;
+  background: var(--sf-light-bg);
+  border: 1px solid var(--sf-light-border);
+  border-radius: 5px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--sf-text-primary);
+  white-space: nowrap;
+  box-shadow: 0 1px 0 var(--sf-light-border);
+}
+
+.editor-page-json {
+  margin-top: 20px;
+  padding: 24px 28px;
+  background: #fff;
+  border-radius: var(--sf-radius);
+  border: 1px solid var(--sf-light-border);
+}
+
+.editor-page-json h3 {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--sf-text-muted);
+  margin-bottom: 16px;
+}
+
+.editor-page-json pre {
+  background: #1e293b;
+  color: #e2e8f0;
+  border-radius: var(--sf-radius-sm);
+  padding: 20px;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-x: auto;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.editor-page-footer {
+  text-align: center;
+  padding: 32px;
+  font-size: 13px;
+  color: var(--sf-text-muted);
+}
+
+.editor-page-footer a {
+  color: var(--sf-primary);
+  text-decoration: none;
+}
+
+.editor-page-footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .editor-page-container {
+    padding: 0 16px;
+    margin: 16px auto;
+  }
+
+  .app {
+    height: 400px;
+  }
+
+  .editor-page-shortcuts-grid {
+    grid-template-columns: 1fr;
+  }
 }

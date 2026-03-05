@@ -1,12 +1,5 @@
-import type { NormalizedVideoHotspot, Point, EasingFunction } from './types';
-
-/** Easing functions for keyframe interpolation */
-const EASING_FUNCTIONS: Record<EasingFunction, (t: number) => number> = {
-  'linear': (t) => t,
-  'ease-in': (t) => t * t,
-  'ease-out': (t) => t * (2 - t),
-  'ease-in-out': (t) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t,
-};
+import type { NormalizedVideoHotspot, Point } from './types';
+import { interpolatePosition } from './interpolation';
 
 export interface TimelineUpdateResult {
   entered: NormalizedVideoHotspot[];
@@ -84,7 +77,7 @@ export class TimelineEngine {
     const hotspot = this.hotspotsById.get(hotspotId);
     if (!hotspot || !hotspot.keyframes || hotspot.keyframes.length === 0) return null;
 
-    return interpolatePosition(hotspot.keyframes, time, hotspot.easing || 'linear');
+    return interpolatePosition(hotspot.keyframes, time, hotspot.easing || 'linear', hotspot.interpolation || 'linear');
   }
 
   /** Find next hotspot start time after the given time */
@@ -140,48 +133,3 @@ export class TimelineEngine {
   }
 }
 
-/** Interpolate position between keyframes */
-function interpolatePosition(
-  keyframes: Array<{ time: number; x: number; y: number }>,
-  currentTime: number,
-  easing: EasingFunction,
-): Point {
-  if (keyframes.length === 0) return { x: 0, y: 0 };
-  if (keyframes.length === 1) return { x: keyframes[0].x, y: keyframes[0].y };
-
-  // Before first keyframe
-  if (currentTime <= keyframes[0].time) {
-    return { x: keyframes[0].x, y: keyframes[0].y };
-  }
-
-  // After last keyframe
-  if (currentTime >= keyframes[keyframes.length - 1].time) {
-    const last = keyframes[keyframes.length - 1];
-    return { x: last.x, y: last.y };
-  }
-
-  // Binary search for the bracketing keyframes
-  let lo = 0;
-  let hi = keyframes.length - 1;
-  while (lo < hi - 1) {
-    const mid = (lo + hi) >> 1;
-    if (keyframes[mid].time <= currentTime) {
-      lo = mid;
-    } else {
-      hi = mid;
-    }
-  }
-
-  const kfA = keyframes[lo];
-  const kfB = keyframes[hi];
-  const duration = kfB.time - kfA.time;
-  if (duration <= 0) return { x: kfA.x, y: kfA.y };
-
-  const rawT = (currentTime - kfA.time) / duration;
-  const t = EASING_FUNCTIONS[easing](rawT);
-
-  return {
-    x: kfA.x + (kfB.x - kfA.x) * t,
-    y: kfA.y + (kfB.y - kfA.y) * t,
-  };
-}

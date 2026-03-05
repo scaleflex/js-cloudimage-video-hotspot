@@ -3,125 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cloudimage Video Hotspot Visual Editor</title>
+  <title>Cloudimage Video Hotspot — Visual Editor</title>
   <link rel="icon" href="https://cdn.prod.website-files.com/623086c828f7c9787009cf20/6267d5ef7488f536294d267b_favicon-256x526.png">
   <link rel="stylesheet" href="./demo.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      background: var(--sf-light-bg, #f5f7fb);
-    }
-
-    .editor-page-container {
-      max-width: 1200px;
-      margin: 32px auto;
-      padding: 0 32px;
-    }
-
-    #editor-root {
-      background: #fff;
-      border-radius: var(--sf-radius, 16px);
-      box-shadow: var(--sf-shadow-md, 0 4px 20px rgba(0,0,0,0.06));
-      overflow: hidden;
-    }
-
-    .editor-page-footer {
-      text-align: center;
-      padding: 32px;
-      font-size: 13px;
-      color: var(--sf-text-muted, #94a3b8);
-    }
-
-    .editor-page-footer a {
-      color: var(--sf-primary, #155bcd);
-      text-decoration: none;
-    }
-
-    .editor-page-shortcuts {
-      margin-top: 20px;
-      padding: 24px 28px;
-      background: #fff;
-      border-radius: var(--sf-radius, 16px);
-      border: 1px solid var(--sf-light-border, #e2e8f0);
-      box-shadow: var(--sf-shadow-sm, 0 1px 3px rgba(0,0,0,0.04));
-    }
-
-    .editor-page-shortcuts h3 {
-      margin: 0 0 16px;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--sf-text-primary, #0f172a);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .editor-page-shortcuts-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 10px;
-    }
-
-    .editor-page-shortcut {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-      color: var(--sf-text-secondary, #64748b);
-    }
-
-    .editor-page-shortcut kbd {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 28px;
-      padding: 3px 8px;
-      background: var(--sf-light-bg, #f5f7fb);
-      border: 1px solid var(--sf-light-border, #e2e8f0);
-      border-radius: 6px;
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--sf-text-primary, #0f172a);
-      box-shadow: 0 1px 0 var(--sf-light-border, #e2e8f0);
-    }
-
-    .editor-page-json {
-      margin-top: 20px;
-      padding: 24px 28px;
-      background: #fff;
-      border-radius: var(--sf-radius, 16px);
-      border: 1px solid var(--sf-light-border, #e2e8f0);
-      box-shadow: var(--sf-shadow-sm, 0 1px 3px rgba(0,0,0,0.04));
-    }
-
-    .editor-page-json h3 {
-      margin: 0 0 16px;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--sf-text-primary, #0f172a);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .editor-page-json pre {
-      margin: 0;
-      padding: 20px 24px;
-      background: var(--sf-dark, #0a0e27);
-      color: #cbd5e1;
-      border-radius: var(--sf-radius-sm, 10px);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
-      font-size: 12px;
-      line-height: 1.6;
-      overflow-x: auto;
-      max-height: 400px;
-      overflow-y: auto;
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body>
+<body style="background: var(--sf-light-bg);">
+  <!-- Nav -->
   <nav class="demo-nav" id="demo-nav">
     <div class="demo-nav-inner">
       <a href="https://www.scaleflex.com" class="demo-logo" target="_blank" rel="noopener">
@@ -148,29 +38,76 @@
   </nav>
 
   <div class="editor-page-container">
-    <div id="editor-root"></div>
-
-    <div class="editor-page-shortcuts">
-      <h3>Keyboard Shortcuts</h3>
-      <div class="editor-page-shortcuts-grid">
-        <div class="editor-page-shortcut"><kbd>A</kbd> Toggle Add mode</div>
-        <div class="editor-page-shortcut"><kbd>V</kbd> Select mode</div>
-        <div class="editor-page-shortcut"><kbd>Del</kbd> Delete selected</div>
-        <div class="editor-page-shortcut"><kbd>Esc</kbd> Deselect / exit Add</div>
-        <div class="editor-page-shortcut"><kbd>Ctrl+Z</kbd> Undo</div>
-        <div class="editor-page-shortcut"><kbd>Ctrl+Shift+Z</kbd> Redo</div>
-        <div class="editor-page-shortcut"><kbd>Space</kbd> Play / Pause video</div>
+    <!-- Editor card -->
+    <div id="editor-root">
+      <div class="app" id="app">
+        <div class="app-top-bar app-top-bar--hidden" id="app-top-bar">
+          <div class="app-mode-toggle" id="mode-toggle-bar">
+            <button class="mode-btn" data-mode="view">View</button>
+            <button class="mode-btn mode-btn--active" data-mode="editor">Editor</button>
+          </div>
+          <div class="app-video-url" id="video-url-bar">
+            <input type="text" id="video-url-input" placeholder="Video URL (mp4, webm, m3u8, YouTube, Vimeo...)" spellcheck="false">
+            <button class="app-video-url-btn" id="video-url-load">Load</button>
+          </div>
+          <div class="app-editor-toolbar" id="editor-toolbar">
+            <label class="toolbar-load-btn">
+              <input type="file" id="toolbar-import-file" accept=".json" hidden>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Import
+            </label>
+            <button class="toolbar-btn" id="toolbar-export">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export
+            </button>
+            <button class="toolbar-btn" id="toolbar-copy">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy JSON
+            </button>
+          </div>
+        </div>
+        <div class="app-main">
+          <div class="app-video-area" id="video-area">
+            <div class="app-mode-toggle app-mode-toggle--overlay" id="mode-toggle-overlay">
+              <button class="mode-btn mode-btn--active" data-mode="view">View</button>
+              <button class="mode-btn" data-mode="editor">Editor</button>
+            </div>
+            <div id="video-viewer"></div>
+          </div>
+          <aside class="app-sidebar" id="sidebar"></aside>
+        </div>
       </div>
     </div>
 
-    <div class="editor-page-json">
+    <!-- Keyboard Shortcuts -->
+    <section class="editor-page-shortcuts">
+      <h3>Keyboard Shortcuts</h3>
+      <div class="editor-page-shortcuts-grid">
+        <div class="editor-page-shortcut"><kbd>A</kbd><span>Add hotspot mode (click to place)</span></div>
+        <div class="editor-page-shortcut"><kbd>V</kbd><span>Select mode</span></div>
+        <div class="editor-page-shortcut"><kbd>Del</kbd><span>Delete selected hotspot</span></div>
+        <div class="editor-page-shortcut"><kbd>Esc</kbd><span>Deselect / cancel placement</span></div>
+        <div class="editor-page-shortcut"><kbd>Ctrl+Z</kbd><span>Undo</span></div>
+        <div class="editor-page-shortcut"><kbd>Ctrl+Shift+Z</kbd><span>Redo</span></div>
+        <div class="editor-page-shortcut"><kbd>Space</kbd><span>Play / Pause</span></div>
+        <div class="editor-page-shortcut"><kbd>DblClick</kbd><span>Add hotspot at position</span></div>
+      </div>
+    </section>
+
+    <!-- Live JSON Output -->
+    <section class="editor-page-json">
       <h3>Live JSON Output</h3>
-      <pre id="json-output">[]</pre>
-    </div>
+      <pre id="json-output"><code>[]</code></pre>
+    </section>
+  </div>
+
+  <!-- Card editor modal (fixed position, outside container) -->
+  <div class="card-editor-overlay" id="card-editor-overlay">
+    <div class="card-editor-modal" id="card-editor-modal"></div>
   </div>
 
   <footer class="editor-page-footer">
-    js-cloudimage-video-hotspot Visual Editor &mdash; MIT License &mdash; <a href="https://www.scaleflex.com" target="_blank" rel="noopener">Scaleflex</a>
+    MIT License &mdash; Made with care by the <a href="https://www.scaleflex.com" target="_blank" rel="noopener">Scaleflex</a> team
   </footer>
 
   <script type="module" src="./editor-demo.ts"></script>
@@ -183,7 +120,8 @@
         const open = nav.classList.toggle('open');
         burger.setAttribute('aria-expanded', String(open));
       });
-      for (const link of nav.querySelectorAll('.demo-nav-links a')) {
+      const links = nav.querySelectorAll('.demo-nav-links a');
+      for (const link of links) {
         link.addEventListener('click', () => {
           nav.classList.remove('open');
           burger.setAttribute('aria-expanded', 'false');

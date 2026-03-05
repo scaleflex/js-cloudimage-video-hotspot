@@ -66,218 +66,7 @@
       </div>
     </section>
 
-    <!-- Getting Started -->
-    <section id="getting-started" class="demo-section demo-section--alt">
-      <div class="demo-section-inner">
-        <div class="demo-section-header">
-          <div class="demo-section-label">Quick Start</div>
-          <h2>Up and running in under a minute</h2>
-          <p>Install from npm or load from CDN &mdash; choose the method that fits your workflow.</p>
-          <div class="demo-hero-sandboxes">
-            <span class="demo-hero-sandboxes-label">Try it live</span>
-            <a href="https://codesandbox.io/p/devbox/github/scaleflex/js-cloudimage-video-hotspot/tree/main/examples/vanilla" class="demo-btn demo-btn--chip" target="_blank" rel="noopener">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-              Vanilla
-            </a>
-            <a href="https://codesandbox.io/p/devbox/github/scaleflex/js-cloudimage-video-hotspot/tree/main/examples/react" class="demo-btn demo-btn--chip" target="_blank" rel="noopener">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M14.23 12.004a2.236 2.236 0 0 1-2.235 2.236 2.236 2.236 0 0 1-2.236-2.236 2.236 2.236 0 0 1 2.235-2.236 2.236 2.236 0 0 1 2.236 2.236zm2.648-10.69c-1.346 0-3.107.96-4.888 2.622-1.78-1.653-3.542-2.602-4.887-2.602-.31 0-.592.068-.846.206C4.747 2.387 4.24 4.462 4.61 7.27c-2.554.834-4.11 2.19-4.11 3.734 0 1.55 1.57 2.92 4.137 3.752-.38 2.79.12 4.855 1.632 5.712.258.147.554.22.857.22 1.35 0 3.118-.966 4.904-2.635 1.794 1.68 3.569 2.655 4.925 2.655.3 0 .59-.073.846-.22 1.507-.854 2.01-2.93 1.64-5.746 2.531-.834 4.06-2.19 4.06-3.738 0-1.543-1.54-2.91-4.094-3.74.38-2.816-.12-4.9-1.637-5.756a1.667 1.667 0 0 0-.848-.213z"/></svg>
-              React
-            </a>
-          </div>
-        </div>
-        <div class="demo-columns demo-reveal">
-          <div class="demo-column demo-card">
-            <div class="demo-feature-header">
-              <div class="demo-feature-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 16V7a2 2 0 00-2-2H6a2 2 0 00-2 2v9m16 0H4m16 0l1.28 2.55a1 1 0 01-.9 1.45H3.62a1 1 0 01-.9-1.45L4 16"/></svg>
-              </div>
-              <div class="demo-feature-title">Install via npm</div>
-            </div>
-            <div class="demo-code-wrap">
-              <pre><code class="language-bash">npm install js-cloudimage-video-hotspot</code></pre>
-              <button class="demo-copy-btn" aria-label="Copy to clipboard">
-                <svg class="demo-copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-                <svg class="demo-check-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              </button>
-            </div>
-            <div class="demo-code-wrap">
-              <pre><code class="language-javascript">import CIVideoHotspot from 'js-cloudimage-video-hotspot';
-
-const player = new CIVideoHotspot('#my-video', {
-  src: 'https://example.com/video.mp4',
-  hotspots: [
-    {
-      id: 'product',
-      x: '40%', y: '60%',
-      startTime: 5, endTime: 20,
-      label: 'Product',
-      data: { title: 'Cool Product', price: '$49' }
-    }
-  ]
-});</code></pre>
-              <button class="demo-copy-btn" aria-label="Copy to clipboard">
-                <svg class="demo-copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-                <svg class="demo-check-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              </button>
-            </div>
-          </div>
-          <div class="demo-column demo-card">
-            <div class="demo-feature-header">
-              <div class="demo-feature-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9"/></svg>
-              </div>
-              <div class="demo-feature-title">Use via CDN</div>
-            </div>
-            <div class="demo-code-wrap demo-code-wrap--fill">
-              <pre><code class="language-html">&lt;script src="https://scaleflex.cloudimg.io/v7/plugins/js-cloudimage-video-hotspot/1.0.0/js-cloudimage-video-hotspot.min.js"&gt;&lt;/script&gt;
-
-&lt;div
-  data-ci-video-hotspot-src="/video.mp4"
-  data-ci-video-hotspot-trigger="click"
-  data-ci-video-hotspot-items='[{"id":"p1","x":"40%","y":"60%","startTime":5,"endTime":20,"label":"Item"}]'
-&gt;&lt;/div&gt;
-
-&lt;script&gt;CIVideoHotspot.autoInit();&lt;/script&gt;</code></pre>
-              <button class="demo-copy-btn" aria-label="Copy to clipboard">
-                <svg class="demo-copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-                <svg class="demo-check-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Video Features -->
-    <section id="features" class="demo-section">
-      <div class="demo-section-inner">
-        <div class="demo-section-header">
-          <div class="demo-section-label">Interactions</div>
-          <h2>Video Features</h2>
-          <p>Time-based hotspots, keyframe motion tracking, and chapter navigation.</p>
-        </div>
-        <div class="demo-grid demo-reveal">
-          <div class="demo-card">
-            <h3><span class="demo-card-icon">&#128722;</span> Shoppable Video</h3>
-            <div id="demo-shoppable" class="demo-viewer"></div>
-          </div>
-          <div class="demo-card">
-            <h3><span class="demo-card-icon">&#127919;</span> Keyframe Motion</h3>
-            <div id="demo-keyframes" class="demo-viewer"></div>
-          </div>
-          <div class="demo-card">
-            <h3><span class="demo-card-icon">&#128209;</span> Chapters</h3>
-            <div id="demo-chapters" class="demo-viewer"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Themes -->
-    <section id="themes" class="demo-section demo-section--alt">
-      <div class="demo-section-inner">
-        <div class="demo-section-header">
-          <div class="demo-section-label">Theming</div>
-          <h2>Themes & Custom Styling</h2>
-          <p>Built-in light and dark themes. Customize every detail with 79+ CSS custom properties.</p>
-        </div>
-        <div class="demo-grid demo-reveal">
-          <div class="demo-card">
-            <h3>Light Theme</h3>
-            <div id="demo-light" class="demo-viewer"></div>
-          </div>
-          <div class="demo-card">
-            <h3>Dark Theme</h3>
-            <div id="demo-dark" class="demo-viewer"></div>
-          </div>
-          <div class="demo-card">
-            <h3>Enhanced Product Card</h3>
-            <div id="demo-enhanced" class="demo-viewer"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Player Types -->
-    <section id="players" class="demo-section">
-      <div class="demo-section-inner">
-        <div class="demo-section-header">
-          <div class="demo-section-label">Multi-Player</div>
-          <h2>Player Types</h2>
-          <p>Works with HTML5 video, HLS streams, YouTube, and Vimeo &mdash; auto-detected from URL.</p>
-        </div>
-        <div class="demo-grid demo-reveal">
-          <div class="demo-card">
-            <h3><span class="demo-card-icon">&#128225;</span> HLS Stream</h3>
-            <div id="demo-hls" class="demo-viewer"></div>
-          </div>
-          <div class="demo-card">
-            <h3><span class="demo-card-icon">&#9654;&#65039;</span> YouTube</h3>
-            <div id="demo-youtube" class="demo-viewer"></div>
-          </div>
-          <div class="demo-card">
-            <h3><span class="demo-card-icon">&#127916;</span> Vimeo</h3>
-            <div id="demo-vimeo" class="demo-viewer"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Advanced Features -->
-    <section id="advanced" class="demo-section demo-section--alt">
-      <div class="demo-section-inner">
-        <div class="demo-section-header">
-          <div class="demo-section-label">Power Features</div>
-          <h2>Advanced Capabilities</h2>
-          <p>Custom rendering, icon markers, poster images, autoplay, and more.</p>
-        </div>
-        <div class="demo-grid demo-reveal">
-          <div class="demo-card">
-            <h3><span class="demo-card-icon">&#127912;</span> Custom Rendering</h3>
-            <div id="demo-custom-render" class="demo-viewer"></div>
-          </div>
-          <div class="demo-card">
-            <h3><span class="demo-card-icon">&#11088;</span> Icon Markers</h3>
-            <div id="demo-icons" class="demo-viewer"></div>
-          </div>
-          <div class="demo-card">
-            <h3><span class="demo-card-icon">&#128444;&#65039;</span> Poster & Autoplay</h3>
-            <div id="demo-poster" class="demo-viewer"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Programmatic API -->
-    <section id="api" class="demo-section">
-      <div class="demo-section-inner">
-        <div class="demo-section-header">
-          <div class="demo-section-label">Developer API</div>
-          <h2>Programmatic Control</h2>
-          <p>Full control over playback, hotspots, and navigation via JavaScript API.</p>
-        </div>
-        <div class="demo-card demo-reveal">
-          <div id="demo-api" class="demo-viewer"></div>
-          <div class="demo-api-controls">
-            <button class="demo-btn demo-btn--outline demo-btn--small" id="api-add">Add Hotspot</button>
-            <button class="demo-btn demo-btn--outline demo-btn--small" id="api-remove">Remove Last</button>
-            <button class="demo-btn demo-btn--outline demo-btn--small" id="api-open">Open Popover</button>
-            <button class="demo-btn demo-btn--outline demo-btn--small" id="api-close">Close All</button>
-            <button class="demo-btn demo-btn--outline demo-btn--small" id="api-next">Next Hotspot</button>
-            <button class="demo-btn demo-btn--outline demo-btn--small" id="api-prev">Prev Hotspot</button>
-          </div>
-          <div class="demo-code-wrap">
-            <pre><code class="language-javascript">const player = new CIVideoHotspot('#video', config);
-
-// Programmatic control
-player.play();
-player.addHotspot({ id: 'new', x: '50%', y: '50%', startTime: 5, endTime: 15, label: 'Dynamic' });
-player.nextHotspot();
-player.goToChapter('features');</code></pre>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- Getting Started, Features, Themes, API sections commented out (see demo.ts) -->
 
     <!-- Interactive Configurator -->
     <section id="configurator" class="demo-section demo-section--alt">
@@ -290,88 +79,69 @@ player.goToChapter('features');</code></pre>
         <div class="demo-configurator demo-reveal">
           <div class="demo-configurator-preview demo-configurator-panel">
             <h3>Preview</h3>
-            <div id="configurator-viewer" class="demo-viewer"></div>
+            <div id="cfg-viewer" class="demo-viewer"></div>
           </div>
           <div class="demo-configurator-panel">
             <h3>Options</h3>
             <div class="demo-configurator-controls">
-              <label class="demo-toggle">
-                <input type="checkbox" id="cfg-pause-interact" checked>
-                <span class="demo-toggle-label">Pause on Interact</span>
-              </label>
-              <label class="demo-toggle">
-                <input type="checkbox" id="cfg-hotspot-nav" checked>
-                <span class="demo-toggle-label">Hotspot Navigation</span>
-              </label>
-              <label class="demo-toggle">
-                <input type="checkbox" id="cfg-pulse" checked>
-                <span class="demo-toggle-label">Pulse</span>
-              </label>
-              <label class="demo-toggle">
-                <input type="checkbox" id="cfg-fullscreen" checked>
-                <span class="demo-toggle-label">Fullscreen Button</span>
-              </label>
-              <label class="demo-toggle">
-                <input type="checkbox" id="cfg-controls" checked>
-                <span class="demo-toggle-label">Controls</span>
-              </label>
-              <label class="demo-toggle">
-                <input type="checkbox" id="cfg-autoplay">
-                <span class="demo-toggle-label">Autoplay</span>
-              </label>
-              <label class="demo-toggle">
-                <input type="checkbox" id="cfg-loop">
-                <span class="demo-toggle-label">Loop</span>
-              </label>
-              <label class="demo-select-label">
-                Trigger
-                <select id="cfg-trigger">
-                  <option value="click">click</option>
-                  <option value="hover">hover</option>
-                </select>
-              </label>
-              <label class="demo-select-label">
-                Theme
-                <select id="cfg-theme">
-                  <option value="light">light</option>
-                  <option value="dark">dark</option>
-                </select>
-              </label>
-              <label class="demo-select-label">
-                Placement
-                <select id="cfg-placement">
-                  <option value="top">top</option>
-                  <option value="bottom">bottom</option>
-                  <option value="left">left</option>
-                  <option value="right">right</option>
-                  <option value="auto">auto</option>
-                </select>
-              </label>
-              <label class="demo-select-label">
-                Marker Style
-                <select id="cfg-marker-style">
-                  <option value="dot">dot</option>
-                  <option value="dot-label">dot-label</option>
-                  <option value="icon">icon</option>
-                  <option value="numbered">numbered</option>
-                </select>
-              </label>
-              <label class="demo-select-label">
-                Timeline
-                <select id="cfg-timeline">
-                  <option value="dot">dot</option>
-                  <option value="range">range</option>
-                  <option value="none">none</option>
-                </select>
-              </label>
-              <label class="demo-select-label">
-                Animation
-                <select id="cfg-animation">
-                  <option value="fade">fade</option>
-                  <option value="scale">scale</option>
-                  <option value="none">none</option>
-                </select>
-              </label>
+              <div class="cfg-group">
+                <div class="cfg-group-title">Hotspot</div>
+                <div class="cfg-group-items">
+                  <label class="demo-select-label">
+                    Marker Style
+                    <select id="cfg-marker-style">
+                      <option value="dot">dot</option>
+                      <option value="dot-label">dot-label</option>
+                      <option value="numbered">numbered</option>
+                    </select>
+                  </label>
+                  <label class="demo-toggle">
+                    <input type="checkbox" id="cfg-pulse" checked>
+                    <span class="demo-toggle-label">Pulse</span>
+                  </label>
+                  <label class="demo-select-label">
+                    Animation
+                    <select id="cfg-animation">
+                      <option value="fade">fade</option>
+                      <option value="scale">scale</option>
+                      <option value="none">none</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+              <div class="cfg-group">
+                <div class="cfg-group-title">Popover</div>
+                <div class="cfg-group-items">
+                  <label class="demo-select-label">
+                    Trigger
+                    <select id="cfg-trigger">
+                      <option value="click">click</option>
+                      <option value="hover">hover</option>
+                    </select>
+                  </label>
+                  <label class="demo-select-label">
+                    Placement
+                    <select id="cfg-placement">
+                      <option value="top">top</option>
+                      <option value="bottom">bottom</option>
+                      <option value="left">left</option>
+                      <option value="right">right</option>
+                      <option value="auto">auto</option>
+                    </select>
+                  </label>
+                  <label class="demo-select-label">
+                    Theme
+                    <select id="cfg-theme">
+                      <option value="light">light</option>
+                      <option value="dark">dark</option>
+                    </select>
+                  </label>
+                  <label class="demo-toggle">
+                    <input type="checkbox" id="cfg-pause-interact" checked>
+                    <span class="demo-toggle-label">Pause on Interact</span>
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
           <div class="demo-configurator-panel demo-configurator-code">
@@ -388,26 +158,10 @@ player.goToChapter('features');</code></pre>
       </div>
     </section>
 
-    <!-- Auto-Init -->
-    <section class="demo-section">
-      <div class="demo-section-inner">
-        <div class="demo-section-header">
-          <div class="demo-section-label">Zero JavaScript</div>
-          <h2>HTML Data-Attributes</h2>
-          <p>Initialize hotspots using only HTML attributes &mdash; no JavaScript required.</p>
-        </div>
-        <div class="demo-card demo-reveal">
-          <div id="demo-auto"
-            data-ci-video-hotspot-src="./3250231-uhd_3840_2160_25fps.mp4"
-            data-ci-video-hotspot-trigger="click"
-            data-ci-video-hotspot-items='[{"id":"auto1","x":"50%","y":"50%","startTime":2,"endTime":10,"label":"Center point","data":{"title":"Auto-initialized","description":"This hotspot was created from data attributes"}}]'>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- HTML Data-Attributes (hidden) -->
   </main>
 
-  <!-- Also by Scaleflex -->
+  <!-- Also by Scaleflex (commented out) -->
   <section class="demo-also" id="also-slider">
     <div class="demo-also-slides">
       <div class="demo-also-slide demo-also-slide--active" data-slide="0">
@@ -514,7 +268,7 @@ player.goToChapter('features');</code></pre>
     <div class="demo-also-dots" id="also-dots"></div>
   </section>
 
-  <footer class="demo-footer">
+  <footer class="demo-footer" id="demo-footer">
     <div class="demo-footer-main">
       <div class="demo-footer-brand">
         <a href="https://www.scaleflex.com" target="_blank" rel="noopener">

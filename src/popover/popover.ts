@@ -42,7 +42,19 @@ export class Popover {
     this.arrowEl = createElement('div', 'ci-video-hotspot-popover-arrow');
     this.contentEl = createElement('div', 'ci-video-hotspot-popover-content');
 
+    // Close button
+    const closeBtn = createElement('button', 'ci-video-hotspot-popover-close', {
+      'type': 'button',
+      'aria-label': 'Close',
+    });
+    closeBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.hide();
+    });
+
     this.element.appendChild(this.arrowEl);
+    this.element.appendChild(closeBtn);
     this.element.appendChild(this.contentEl);
 
     // Render content
