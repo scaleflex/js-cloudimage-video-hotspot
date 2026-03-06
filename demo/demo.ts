@@ -1,5 +1,4 @@
 import CIVideoHotspot from '../src/index';
-import './editor-demo';
 import { initConfigurator } from './configurator';
 
 // ──────────────────── Viewer (standalone player with hotspots) ────────────────────
@@ -334,6 +333,7 @@ const MOTION_OPTS = {
   src: HERO_VIDEO,
   autoplay: true,
   loop: true,
+  controls: false,
   hotspotNavigation: false,
   timelineIndicators: 'none' as const,
   trigger: 'hover' as const,
@@ -526,65 +526,6 @@ if (heroToggle) {
 // ──────────────────── Configurator ────────────────────
 initConfigurator();
 
-/*
-// ──────────────────── Auto-Init (hidden) ────────────────────
-// CIVideoHotspot.autoInit();
-
-// ──────────────────── Nav: scroll shadow + active section ────────────────────
-const nav = document.getElementById('demo-nav');
-const navLinks = document.querySelectorAll<HTMLAnchorElement>('.demo-nav-links a');
-const sections = document.querySelectorAll<HTMLElement>('main section[id]');
-
-function updateNav(): void {
-  if (nav) {
-    nav.classList.toggle('scrolled', window.scrollY > 10);
-  }
-
-  let currentId = '';
-  const offset = 120;
-  for (const section of sections) {
-    if (section.offsetTop - offset <= window.scrollY) {
-      currentId = section.id;
-    }
-  }
-  for (const link of navLinks) {
-    const href = link.getAttribute('href');
-    link.classList.toggle('active', href === `#${currentId}`);
-  }
-}
-
-for (const link of navLinks) {
-  link.addEventListener('click', (e) => {
-    const href = link.getAttribute('href');
-    if (!href?.startsWith('#')) return;
-    const target = document.getElementById(href.slice(1));
-    if (!target) return;
-    e.preventDefault();
-    const navHeight = nav ? nav.offsetHeight : 0;
-    const top = target.getBoundingClientRect().top + window.scrollY - navHeight - 12;
-    window.scrollTo({ top, behavior: 'smooth' });
-  });
-}
-
-window.addEventListener('scroll', updateNav, { passive: true });
-updateNav();
-
-// ──────────────────── Mobile burger ────────────────────
-const burger = document.getElementById('nav-burger');
-if (nav && burger) {
-  burger.addEventListener('click', () => {
-    const open = nav.classList.toggle('open');
-    burger.setAttribute('aria-expanded', String(open));
-  });
-
-  for (const link of navLinks) {
-    link.addEventListener('click', () => {
-      nav.classList.remove('open');
-      burger.setAttribute('aria-expanded', 'false');
-    });
-  }
-}
-
 // ──────────────────── Also by Scaleflex carousel ────────────────────
 {
   const slides = document.querySelectorAll<HTMLElement>('.demo-also-slide');
@@ -650,4 +591,3 @@ if (nav && burger) {
     resetTimer();
   }
 }
-*/

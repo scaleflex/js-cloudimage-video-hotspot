@@ -19,12 +19,9 @@
       </a>
       <div class="demo-nav-links">
         <a href="./index.html">Demo</a>
-        <a href="./index.html#getting-started">Install</a>
-        <a href="./index.html#features">Features</a>
-        <a href="./index.html#themes">Themes</a>
+        <a href="./index.html#motion-types">Motion</a>
         <a href="./index.html#players">Players</a>
-        <a href="./index.html#advanced">Advanced</a>
-        <a href="./index.html#api">API</a>
+        <a href="./index.html#getting-started">Install</a>
         <a href="./index.html#configurator">Configurator</a>
         <a href="./editor.html" class="active">Visual Editor</a>
       </div>
@@ -41,7 +38,7 @@
     <!-- Editor card -->
     <div id="editor-root">
       <div class="app" id="app">
-        <div class="app-top-bar app-top-bar--hidden" id="app-top-bar">
+        <div class="app-top-bar" id="app-top-bar">
           <div class="app-mode-toggle" id="mode-toggle-bar">
             <button class="mode-btn" data-mode="view">View</button>
             <button class="mode-btn mode-btn--active" data-mode="editor">Editor</button>
@@ -68,9 +65,9 @@
         </div>
         <div class="app-main">
           <div class="app-video-area" id="video-area">
-            <div class="app-mode-toggle app-mode-toggle--overlay" id="mode-toggle-overlay">
-              <button class="mode-btn mode-btn--active" data-mode="view">View</button>
-              <button class="mode-btn" data-mode="editor">Editor</button>
+            <div class="app-mode-toggle app-mode-toggle--overlay app-mode-toggle--hidden" id="mode-toggle-overlay">
+              <button class="mode-btn" data-mode="view">View</button>
+              <button class="mode-btn mode-btn--active" data-mode="editor">Editor</button>
             </div>
             <div id="video-viewer"></div>
           </div>

@@ -1,7 +1,8 @@
 import CIVideoHotspot from '../src/index';
 import type { CIVideoHotspotConfig, MarkerStyle, HotspotAnimation } from '../src/core/types';
 
-const SAMPLE_VIDEO = './3250231-uhd_3840_2160_25fps.mp4';
+const SAMPLE_VIDEO = './bed.mp4';
+const CONFIGURATOR_VIDEO = '/my-configurator-video.mp4';
 
 let instance: CIVideoHotspot | null = null;
 
@@ -83,8 +84,8 @@ export function initConfigurator(): void {
       pauseOnInteract: cfgPauseInteract.checked,
       hotspotNavigation: false,
       pulse: cfgPulse.checked,
-      fullscreenButton: true,
-      controls: true,
+      fullscreenButton: false,
+      controls: false,
       autoplay: true,
       loop: true,
       muted: true,
@@ -115,23 +116,7 @@ export function initConfigurator(): void {
     const config = getConfig();
 
     if (instance) {
-      const currentTime = instance.getCurrentTime();
-      const wasPaused = (document.querySelector('#cfg-viewer .ci-video-hotspot-video') as HTMLVideoElement)?.paused;
-      instance.destroy();
-      instance = null;
-      viewerEl!.innerHTML = '';
-
-      instance = new CIVideoHotspot(viewerEl!, {
-        ...config,
-        onReady: () => {
-          instance!.seek(currentTime);
-          if (wasPaused) {
-            instance!.pause();
-          } else {
-            instance!.play();
-          }
-        },
-      });
+      instance.update(config);
     } else {
       instance = new CIVideoHotspot(viewerEl!, config);
     }

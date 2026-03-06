@@ -292,17 +292,25 @@ export class CIVideoHotspot implements CIVideoHotspotInstance {
   }
 
   private initContainerEvents(): void {
-    // Click on overlay to toggle play/pause
-    this.cleanups.push(addListener(this.overlayEl, 'click', (e) => {
-      if ((e.target as HTMLElement).closest('.ci-video-hotspot-marker, .ci-video-hotspot-popover')) return;
+    // Click on container to toggle play/pause (handles when controls are hidden)
+    this.cleanups.push(addListener(this.containerEl, 'click', (e) => {
+      if ((e.target as HTMLElement).closest('.ci-video-hotspot-marker, .ci-video-hotspot-popover, .ci-video-hotspot-controls')) return;
+      if (this.controls) {
+        this.controls.show();
+        if (!this.player.isPaused()) {
+          this.controls.startIdleTimer();
+        }
+      }
       this.togglePlay();
     }));
 
-    // Show controls on mouse move
+    // Show controls on mouse move (also when paused)
     this.cleanups.push(addListener(this.containerEl, 'mousemove', () => {
-      if (this.controls && !this.player.isPaused()) {
+      if (this.controls) {
         this.controls.show();
-        this.controls.startIdleTimer();
+        if (!this.player.isPaused()) {
+          this.controls.startIdleTimer();
+        }
       }
     }));
 
@@ -865,19 +873,53 @@ export class CIVideoHotspot implements CIVideoHotspotInstance {
   // === Public API: Lifecycle ===
 
   update(config: Partial<CIVideoHotspotConfig>): void {
-    this.destroyInternal();
+    const srcChanged = config.src !== undefined && config.src !== this.config.src;
+
+    // Save player state before teardown
+    let currentTime = 0;
+    let wasPaused = true;
+    if (!srcChanged && this.player) {
+      currentTime = this.player.getCurrentTime();
+      wasPaused = this.player.isPaused();
+    }
+
+    this.destroyInternal(!srcChanged);
+
     const newConfig = { ...this.config, ...config } as CIVideoHotspotConfig;
     validateConfig(newConfig);
     this.config = mergeConfig(newConfig);
     this.emitAnalytics = createAnalyticsEmitter(newConfig.onAnalytics, () => this.player?.getCurrentTime() ?? 0);
+
+    acquireLiveRegion();
     this.buildDOM();
-    this.initPlayer();
+
+    if (srcChanged) {
+      this.initPlayer();
+    } else {
+      // Re-mount existing player into the new DOM without reloading the video
+      this.videoWrapperEl.insertBefore(this.player.element, this.markersEl);
+
+      // Re-resolve chapters with the known duration
+      if (this.config.chapters) {
+        this.resolvedChapters = resolveChapterEndTimes(this.config.chapters, this.player.getDuration());
+      }
+    }
+
     this.initTimeline();
     this.initControls();
     this.initHotspotNav();
     this.initFullscreen();
     this.initKeyboard();
     this.initContainerEvents();
+
+    // Restore playback state when the player was preserved
+    if (!srcChanged) {
+      this.onTimeUpdate(currentTime);
+      this.controls?.update();
+      if (!wasPaused) {
+        this.startRenderLoop();
+      }
+    }
   }
 
   destroy(): void {
@@ -887,7 +929,7 @@ export class CIVideoHotspot implements CIVideoHotspotInstance {
     this.rootEl.innerHTML = '';
   }
 
-  private destroyInternal(): void {
+  private destroyInternal(preservePlayer = false): void {
     // Clear timers
     for (const timer of this.activeTimers) {
       clearTimeout(timer);
@@ -938,7 +980,9 @@ export class CIVideoHotspot implements CIVideoHotspotInstance {
     this.fullscreenControl = null;
     this.keyboardHandler?.destroy();
     this.keyboardHandler = null;
-    this.player?.destroy();
+    if (!preservePlayer) {
+      this.player?.destroy();
+    }
 
     // Clear state
     this.normalizedHotspots.clear();

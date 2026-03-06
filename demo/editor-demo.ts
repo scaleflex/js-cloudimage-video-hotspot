@@ -8,7 +8,7 @@ const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'
 
 // ──────────────────── State ────────────────────
 type AppMode = 'view' | 'editor';
-let mode: AppMode = 'view';
+let mode: AppMode = 'editor';
 let hotspots: VideoHotspotItem[] = getSampleHotspots();
 let selectedHotspotId: string | null = null;
 let selectedPointIndex: number | null = null;
@@ -78,9 +78,20 @@ function updateJsonOutput(): void {
 
 // ──────────────────── Init ────────────────────
 function init(): void {
+  if (!document.getElementById('video-viewer')) return;
+  // Pre-populate URL input with current video source
+  const urlInput = document.getElementById('video-url-input') as HTMLInputElement;
+  if (urlInput) urlInput.value = videoSrc;
   setupModeToggle();
   setupToolbar();
   setupKeyboardShortcuts();
+  // Apply initial editor mode state to DOM
+  document.querySelectorAll('.mode-btn').forEach((btn) => {
+    btn.classList.toggle('mode-btn--active', (btn as HTMLElement).dataset.mode === mode);
+  });
+  document.getElementById('sidebar')?.classList.toggle('app-sidebar--hidden', mode === 'view');
+  document.getElementById('mode-toggle-overlay')?.classList.toggle('app-mode-toggle--hidden', mode === 'editor');
+  document.getElementById('app-top-bar')?.classList.toggle('app-top-bar--hidden', mode === 'view');
   rebuildViewer();
   updateJsonOutput();
 }
@@ -103,33 +114,65 @@ function setupToolbar(): void {
     redoStack = [];
     placementMode = false;
 
-    // Visual feedback
+    // Visual feedback on button
     if (loadBtn) {
       loadBtn.textContent = 'Loading…';
       loadBtn.setAttribute('disabled', '');
     }
+
+    // Show loading overlay on the video area
+    const videoArea = document.getElementById('video-area')!;
+    let loadingOverlay = videoArea.querySelector('.video-loading-overlay') as HTMLElement | null;
+    if (!loadingOverlay) {
+      loadingOverlay = document.createElement('div');
+      loadingOverlay.className = 'video-loading-overlay';
+      loadingOverlay.innerHTML = '<div class="video-loading-spinner"></div><div class="video-loading-text">Loading video…</div>';
+      videoArea.appendChild(loadingOverlay);
+    }
+    loadingOverlay.classList.add('video-loading-overlay--visible');
 
     rebuildViewer(true);
     updateJsonOutput();
 
     // Listen for load success / error on the new video element
     const videoEl = document.querySelector('.ci-video-hotspot-video') as HTMLVideoElement | null;
+    const hideLoading = () => {
+      loadingOverlay?.classList.remove('video-loading-overlay--visible');
+      if (loadBtn) {
+        loadBtn.textContent = 'Load';
+        loadBtn.removeAttribute('disabled');
+      }
+    };
+
+    // Fallback timeout — hide loading after 15s even if no event fires
+    const loadTimeout = setTimeout(() => {
+      hideLoading();
+      urlInput.style.borderColor = '#ef4444';
+      urlInput.placeholder = 'Video failed to load — check the URL';
+      setTimeout(() => {
+        urlInput.style.borderColor = '';
+        urlInput.placeholder = 'Video URL (mp4, webm, m3u8, YouTube, Vimeo...)';
+      }, 3000);
+    }, 15000);
+
     if (videoEl) {
       const onLoaded = () => {
+        clearTimeout(loadTimeout);
         cleanup();
-        if (loadBtn) {
-          loadBtn.textContent = 'Load';
-          loadBtn.removeAttribute('disabled');
-        }
+        hideLoading();
+        // Force first frame to render — seek to a tiny offset so the browser decodes a frame
+        videoEl.currentTime = 0.001;
       };
       const onError = () => {
+        clearTimeout(loadTimeout);
         cleanup();
-        if (loadBtn) {
-          loadBtn.textContent = 'Load';
-          loadBtn.removeAttribute('disabled');
-        }
+        hideLoading();
         urlInput.style.borderColor = '#ef4444';
-        setTimeout(() => { urlInput.style.borderColor = ''; }, 2000);
+        urlInput.placeholder = 'Video failed to load — check the URL';
+        setTimeout(() => {
+          urlInput.style.borderColor = '';
+          urlInput.placeholder = 'Video URL (mp4, webm, m3u8, YouTube, Vimeo...)';
+        }, 3000);
       };
       const cleanup = () => {
         videoEl.removeEventListener('loadedmetadata', onLoaded);
@@ -137,6 +180,11 @@ function setupToolbar(): void {
       };
       videoEl.addEventListener('loadedmetadata', onLoaded, { once: true });
       videoEl.addEventListener('error', onError, { once: true });
+    } else {
+      // Non-HTML5 adapter (YouTube/Vimeo) — hide loading when onReady fires
+      // onReady is already handled in rebuildViewer, just clear the timeout
+      clearTimeout(loadTimeout);
+      hideLoading();
     }
   };
   loadBtn?.addEventListener('click', loadVideo);
@@ -235,6 +283,13 @@ function setMode(newMode: AppMode): void {
   rebuildViewer();
 }
 
+function updateAddBtnState(): void {
+  const btn = document.querySelector('.sidebar-add-btn') as HTMLElement | null;
+  if (!btn) return;
+  btn.classList.toggle('sidebar-add-btn--active', placementMode);
+  btn.textContent = placementMode ? 'Click to place…' : '+ Add Hotspot';
+}
+
 // ──────────────────── Viewer ────────────────────
 function rebuildViewer(skipSeekSave = false): void {
   // Save time to restore after rebuild (skip when loading a new video)
@@ -300,6 +355,15 @@ function setupEditorHandlers(): void {
 
   const videoArea = document.getElementById('video-area')!;
 
+  // Prevent CIVideoHotspot popover cards from opening on marker clicks in editor mode
+  videoArea.addEventListener('click', (e) => {
+    if (mode !== 'editor') return;
+    const marker = (e.target as HTMLElement).closest('.ci-video-hotspot-marker');
+    if (marker) {
+      e.stopPropagation();
+    }
+  }, true);
+
   // Double-click to create hotspot
   videoArea.addEventListener('dblclick', handleVideoDoubleClick);
 
@@ -323,6 +387,7 @@ function handleVideoClick(e: MouseEvent): void {
   if (!pos) return;
   placementMode = false;
   document.getElementById('video-area')!.classList.remove('app-video-area--crosshair');
+  updateAddBtnState();
   createHotspotAtPosition(pos.x, pos.y);
 }
 
@@ -592,11 +657,12 @@ function renderSidebar(): void {
   const header = el('div', 'sidebar-header');
   const title = el('h2');
   title.textContent = 'Hotspots';
-  const addBtn = el('button', 'sidebar-add-btn');
-  addBtn.textContent = '+ Add Hotspot';
+  const addBtn = el('button', `sidebar-add-btn${placementMode ? ' sidebar-add-btn--active' : ''}`);
+  addBtn.textContent = placementMode ? 'Click to place…' : '+ Add Hotspot';
   addBtn.addEventListener('click', () => {
-    placementMode = true;
-    document.getElementById('video-area')!.classList.add('app-video-area--crosshair');
+    placementMode = !placementMode;
+    document.getElementById('video-area')!.classList.toggle('app-video-area--crosshair', placementMode);
+    updateAddBtnState();
   });
   header.appendChild(title);
   header.appendChild(addBtn);
@@ -1187,6 +1253,7 @@ function setupKeyboardShortcuts(): void {
         }
         placementMode = true;
         document.getElementById('video-area')!.classList.add('app-video-area--crosshair');
+        updateAddBtnState();
         break;
 
       case 'v':
@@ -1196,6 +1263,7 @@ function setupKeyboardShortcuts(): void {
         }
         placementMode = false;
         document.getElementById('video-area')!.classList.remove('app-video-area--crosshair');
+        updateAddBtnState();
         break;
 
       case 'Delete':
@@ -1208,6 +1276,7 @@ function setupKeyboardShortcuts(): void {
         if (placementMode) {
           placementMode = false;
           document.getElementById('video-area')!.classList.remove('app-video-area--crosshair');
+          updateAddBtnState();
         } else if (selectedHotspotId) {
           selectedHotspotId = null;
           selectedPointIndex = null;

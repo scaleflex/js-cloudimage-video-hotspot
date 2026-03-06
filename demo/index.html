@@ -47,73 +47,17 @@
             Get Started
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
           </a>
+          <a href="./editor.html" class="demo-btn demo-btn--glass">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Visual Editor
+          </a>
           <a href="https://github.com/scaleflex/js-cloudimage-video-hotspot" class="demo-btn demo-btn--glass" target="_blank" rel="noopener">
             <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
             GitHub
           </a>
         </div>
         <div class="demo-hero-showcase">
-          <!-- Side toggle -->
-          <div class="demo-hero-toggle" id="hero-toggle">
-            <button class="demo-hero-toggle-btn demo-hero-toggle-btn--active" data-variant="editor" title="Visual Editor">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-              <span>Editor</span>
-            </button>
-            <button class="demo-hero-toggle-btn" data-variant="viewer" title="Video Player">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              <span>Player</span>
-            </button>
-          </div>
-          <!-- Editor variant -->
-          <div class="demo-hero-variant demo-hero-variant--active" id="hero-variant-editor">
-            <div id="editor-root" class="demo-viewer demo-viewer--hero">
-              <div class="app" id="app">
-                <div class="app-top-bar app-top-bar--hidden" id="app-top-bar">
-                  <div class="app-mode-toggle" id="mode-toggle-bar">
-                    <button class="mode-btn" data-mode="view">View</button>
-                    <button class="mode-btn mode-btn--active" data-mode="editor">Editor</button>
-                  </div>
-                  <div class="app-video-url" id="video-url-bar">
-                    <input type="text" id="video-url-input" placeholder="Video URL (mp4, webm, m3u8, YouTube, Vimeo...)" spellcheck="false">
-                    <button class="app-video-url-btn" id="video-url-load">Load</button>
-                  </div>
-                  <div class="app-editor-toolbar" id="editor-toolbar">
-                    <label class="toolbar-load-btn">
-                      <input type="file" id="toolbar-import-file" accept=".json" hidden>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                      Import
-                    </label>
-                    <button class="toolbar-btn" id="toolbar-export">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                      Export
-                    </button>
-                    <button class="toolbar-btn" id="toolbar-copy">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-                      Copy JSON
-                    </button>
-                  </div>
-                </div>
-                <div class="app-main">
-                  <div class="app-video-area" id="video-area">
-                    <div class="app-mode-toggle app-mode-toggle--overlay" id="mode-toggle-overlay">
-                      <button class="mode-btn mode-btn--active" data-mode="view">View</button>
-                      <button class="mode-btn" data-mode="editor">Editor</button>
-                    </div>
-                    <div id="video-viewer"></div>
-                  </div>
-                  <aside class="app-sidebar" id="sidebar"></aside>
-                </div>
-              </div>
-            </div>
-            <!-- Card editor modal -->
-            <div class="card-editor-overlay" id="card-editor-overlay">
-              <div class="card-editor-modal" id="card-editor-modal"></div>
-            </div>
-          </div>
-          <!-- Viewer variant -->
-          <div class="demo-hero-variant" id="hero-variant-viewer">
-            <div id="hero-viewer" class="demo-viewer demo-viewer--hero"></div>
-          </div>
+          <div id="hero-viewer" class="demo-viewer demo-viewer--hero"></div>
         </div>
         <div class="demo-hero-meta">
           <span>&lt;20 KB gzipped</span>
@@ -164,9 +108,6 @@
               <div class="demo-feature-title">Linear</div>
             </div>
             <p class="demo-feature-desc">Two keyframes connected by straight-line interpolation. The hotspot moves smoothly from left to right at constant speed.</p>
-            <div class="demo-code-wrap">
-              <pre><code class="language-javascript">interpolation: 'linear'</code></pre>
-            </div>
           </div>
         </div>
 
@@ -184,9 +125,6 @@
               <div class="demo-feature-title">Curved Path</div>
             </div>
             <p class="demo-feature-desc">Three keyframes with Catmull-Rom spline interpolation create a smooth V-shaped arc. The hotspot follows a natural curved trajectory.</p>
-            <div class="demo-code-wrap">
-              <pre><code class="language-javascript">interpolation: 'catmull-rom'</code></pre>
-            </div>
           </div>
         </div>
 
@@ -204,9 +142,6 @@
               <div class="demo-feature-title">Complex Path</div>
             </div>
             <p class="demo-feature-desc">Four or more keyframes trace an S-curve through the scene. Catmull-Rom interpolation ensures the motion feels fluid and organic.</p>
-            <div class="demo-code-wrap">
-              <pre><code class="language-javascript">interpolation: 'catmull-rom'</code></pre>
-            </div>
           </div>
         </div>
       </div>
@@ -233,7 +168,6 @@
             </div>
             <h3 class="demo-player-name">HTML5 Video</h3>
             <p class="demo-player-desc">MP4, WebM — native browser playback with zero overhead.</p>
-            <code class="demo-player-hint">playerType: 'html5'</code>
           </div>
           <!-- YouTube -->
           <div class="demo-card demo-player-card">
@@ -246,7 +180,6 @@
             </div>
             <h3 class="demo-player-name">YouTube</h3>
             <p class="demo-player-desc">Embed any YouTube video and layer interactive hotspots on top.</p>
-            <code class="demo-player-hint">playerType: 'youtube'</code>
           </div>
           <!-- Vimeo -->
           <div class="demo-card demo-player-card">
@@ -258,7 +191,6 @@
             </div>
             <h3 class="demo-player-name">Vimeo</h3>
             <p class="demo-player-desc">Professional Vimeo embeds with full hotspot integration.</p>
-            <code class="demo-player-hint">playerType: 'vimeo'</code>
           </div>
           <!-- HLS -->
           <div class="demo-card demo-player-card">
@@ -276,7 +208,6 @@
             </div>
             <h3 class="demo-player-name">HLS Streaming</h3>
             <p class="demo-player-desc">Adaptive bitrate via hls.js — ideal for live and long-form content.</p>
-            <code class="demo-player-hint">playerType: 'hls'</code>
           </div>
         </div>
       </div>
@@ -376,77 +307,87 @@ const player = new CIVideoHotspot('#my-video', {
             <h3>Preview</h3>
             <div id="cfg-viewer" class="demo-viewer"></div>
           </div>
-          <div class="demo-configurator-panel">
-            <h3>Options</h3>
-            <div class="demo-configurator-controls">
-              <div class="cfg-group">
-                <div class="cfg-group-title">Hotspot</div>
-                <div class="cfg-group-items">
-                  <label class="demo-select-label">
-                    Marker Style
-                    <select id="cfg-marker-style">
-                      <option value="dot">dot</option>
-                      <option value="dot-label">dot-label</option>
-                      <option value="numbered">numbered</option>
-                    </select>
-                  </label>
-                  <label class="demo-toggle">
-                    <input type="checkbox" id="cfg-pulse" checked>
-                    <span class="demo-toggle-label">Pulse</span>
-                  </label>
-                  <label class="demo-select-label">
-                    Animation
-                    <select id="cfg-animation">
-                      <option value="fade">fade</option>
-                      <option value="scale">scale</option>
-                      <option value="none">none</option>
-                    </select>
-                  </label>
+          <div class="demo-configurator-sidebar">
+            <div class="demo-configurator-panel">
+              <h3>Options</h3>
+              <div class="demo-configurator-controls">
+                <div class="cfg-group">
+                  <div class="cfg-group-title">Hotspot</div>
+                  <div class="cfg-group-items">
+                    <div class="cfg-group-selects">
+                      <label class="demo-select-label">
+                        Marker Style
+                        <select id="cfg-marker-style">
+                          <option value="dot">dot</option>
+                          <option value="dot-label">dot-label</option>
+                          <option value="numbered">numbered</option>
+                        </select>
+                      </label>
+                      <label class="demo-select-label">
+                        Animation
+                        <select id="cfg-animation">
+                          <option value="fade">fade</option>
+                          <option value="scale">scale</option>
+                          <option value="none">none</option>
+                        </select>
+                      </label>
+                    </div>
+                    <div class="cfg-group-toggles">
+                      <label class="demo-toggle">
+                        <input type="checkbox" id="cfg-pulse" checked>
+                        <span class="demo-toggle-label">Pulse</span>
+                      </label>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div class="cfg-group">
-                <div class="cfg-group-title">Popover</div>
-                <div class="cfg-group-items">
-                  <label class="demo-select-label">
-                    Trigger
-                    <select id="cfg-trigger">
-                      <option value="click">click</option>
-                      <option value="hover">hover</option>
-                    </select>
-                  </label>
-                  <label class="demo-select-label">
-                    Placement
-                    <select id="cfg-placement">
-                      <option value="top">top</option>
-                      <option value="bottom">bottom</option>
-                      <option value="left">left</option>
-                      <option value="right">right</option>
-                      <option value="auto">auto</option>
-                    </select>
-                  </label>
-                  <label class="demo-select-label">
-                    Theme
-                    <select id="cfg-theme">
-                      <option value="light">light</option>
-                      <option value="dark">dark</option>
-                    </select>
-                  </label>
-                  <label class="demo-toggle">
-                    <input type="checkbox" id="cfg-pause-interact" checked>
-                    <span class="demo-toggle-label">Pause on Interact</span>
-                  </label>
+                <div class="cfg-group">
+                  <div class="cfg-group-title">Popover</div>
+                  <div class="cfg-group-items">
+                    <div class="cfg-group-selects">
+                      <label class="demo-select-label">
+                        Trigger
+                        <select id="cfg-trigger">
+                          <option value="click">click</option>
+                          <option value="hover">hover</option>
+                        </select>
+                      </label>
+                      <label class="demo-select-label">
+                        Placement
+                        <select id="cfg-placement">
+                          <option value="top">top</option>
+                          <option value="bottom">bottom</option>
+                          <option value="left">left</option>
+                          <option value="right">right</option>
+                          <option value="auto">auto</option>
+                        </select>
+                      </label>
+                      <label class="demo-select-label">
+                        Theme
+                        <select id="cfg-theme">
+                          <option value="light">light</option>
+                          <option value="dark">dark</option>
+                        </select>
+                      </label>
+                    </div>
+                    <div class="cfg-group-toggles">
+                      <label class="demo-toggle">
+                        <input type="checkbox" id="cfg-pause-interact" checked>
+                        <span class="demo-toggle-label">Pause on Interact</span>
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="demo-configurator-panel demo-configurator-code">
-            <h3>Generated Code</h3>
-            <div class="demo-code-wrap">
-              <pre id="cfg-code"><code></code></pre>
-              <button id="cfg-copy" class="demo-copy-btn" aria-label="Copy to clipboard">
-                <svg class="demo-copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-                <svg class="demo-check-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              </button>
+            <div class="demo-configurator-panel demo-configurator-code">
+              <h3>Generated Code</h3>
+              <div class="demo-code-wrap">
+                <pre id="cfg-code"><code></code></pre>
+                <button id="cfg-copy" class="demo-copy-btn" aria-label="Copy to clipboard">
+                  <svg class="demo-copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                  <svg class="demo-check-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -456,7 +397,7 @@ const player = new CIVideoHotspot('#my-video', {
     <!-- HTML Data-Attributes (hidden) -->
   </main>
 
-  <!-- Also by Scaleflex (commented out) -->
+  <!-- Also by Scaleflex -->
   <section class="demo-also" id="also-slider">
     <div class="demo-also-slides">
       <div class="demo-also-slide demo-also-slide--active" data-slide="0">
