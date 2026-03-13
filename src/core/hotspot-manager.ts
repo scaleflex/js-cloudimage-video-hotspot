@@ -247,7 +247,22 @@ export class HotspotManager implements HotspotManagerInterface {
     }
   }
 
+  /** Allow navigation manager to set play-state tracking for seek-and-open */
+  setWasPlayingBeforePause(value: boolean): void {
+    this.wasPlayingBeforePause = value;
+    if (value) {
+      this.userPausedDuringInteract = false;
+    }
+  }
+
   open(id: string): void {
+    // Ensure marker and popover exist (they may not if timeUpdate hasn't fired yet)
+    if (!this.markers.has(id) || !this.popovers.has(id)) {
+      const hotspot = this.normalizedHotspots.get(id);
+      if (!hotspot) return;
+      this.showHotspot(hotspot);
+    }
+
     const popover = this.popovers.get(id);
     const marker = this.markers.get(id);
     if (popover && marker) {

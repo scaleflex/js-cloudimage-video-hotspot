@@ -38,11 +38,28 @@ export class NavigationManager implements NavigationManagerInterface {
   }
 
   private seekAndOpen(startTime: number, id: string): void {
+    // Cancel pending open timers (prevent stale opens from rapid clicks)
+    for (const timer of this.activeTimers) {
+      clearTimeout(timer);
+    }
+    this.activeTimers.clear();
+
+    // Close any currently open cards
+    this.hotspotManager.closeAll();
+
     const duration = this.ctx.player.getDuration();
     const clampedTime = Math.max(0, Math.min(startTime, duration));
+
+    // Track play state before pausing so resume-on-close works
+    this.hotspotManager.setWasPlayingBeforePause(!this.ctx.player.isPaused());
+
     this.ctx.player.seek(clampedTime);
     this.ctx.player.pause();
-    // Wait for timeUpdate to show the hotspot, then open it
+
+    // Force timeline update so markers are created at the seeked time
+    this.hotspotManager.processTimeUpdate(clampedTime);
+
+    // Open after a brief settle to let the seek complete visually
     const timer = setTimeout(() => {
       this.activeTimers.delete(timer);
       this.hotspotManager.open(id);

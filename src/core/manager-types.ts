@@ -35,6 +35,7 @@ export interface HotspotManagerInterface {
   open(id: string): void;
   close(id: string): void;
   closeAll(): void;
+  setWasPlayingBeforePause(value: boolean): void;
   addHotspot(hotspot: VideoHotspotItem): void;
   removeHotspot(id: string): void;
   updateHotspot(id: string, updates: Partial<VideoHotspotItem>): void;
