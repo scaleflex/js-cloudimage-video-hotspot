@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"E:/Working Folder/Video hotspot plugin/js-cloudimage-video-hotspot\" && npm test 2>&1)",
+      "WebSearch",
+      "Bash(head:*)",
+      "Bash(npx vitest:*)",
+      "WebFetch(domain:localhost)",
+      "Bash(curl:*)",
+      "WebFetch(domain:scaleflex.github.io)",
+      "Bash(npx vite:*)",
+      "Bash(node:*)",
+      "Bash(npx tsc:*)",
+      "Bash(powershell:*)",
+      "Bash(npm run:*)"
+    ]
+  }
+}
