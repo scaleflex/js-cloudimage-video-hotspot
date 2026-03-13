@@ -2019,12 +2019,24 @@ kbd {
 }
 
 .mode-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
   color: #fff;
 }
 
-.mode-btn--active {
+.mode-btn--active,
+.mode-btn--active:hover {
   background: #fff;
   color: #0f172a;
+  cursor: default;
+  transition: opacity 0.15s;
+}
+
+.app-mode-toggle:hover .mode-btn--active {
+  opacity: 0.55;
+}
+
+.app-mode-toggle .mode-btn--active:hover {
+  opacity: 1;
 }
 
 /* === Video Area === */
@@ -2109,6 +2121,75 @@ kbd {
 
 .sidebar-add-btn--active:hover {
   background: #d97706;
+}
+
+/* Global trigger toggle */
+.sidebar-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  border-bottom: 1px solid #334155;
+  background: #0f172a;
+}
+
+.sidebar-trigger__label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #94a3b8;
+}
+
+.sidebar-trigger__toggle {
+  display: flex;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.sidebar-trigger__btn {
+  background: transparent;
+  color: #94a3b8;
+  border: none;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.sidebar-trigger__btn + .sidebar-trigger__btn {
+  border-left: 1px solid #334155;
+}
+
+.sidebar-trigger__btn:hover {
+  background: #1e293b;
+}
+
+.sidebar-trigger__btn--active {
+  background: #3b82f6;
+  color: #fff;
+}
+
+.sidebar-trigger__btn--active:hover {
+  background: #2563eb;
+}
+
+.sidebar-trigger__checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #e2e8f0;
+  cursor: pointer;
+}
+
+.sidebar-trigger__checkbox input[type="checkbox"] {
+  accent-color: #3b82f6;
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
 }
 
 /* Video loading overlay */

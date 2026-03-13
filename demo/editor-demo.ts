@@ -18,6 +18,9 @@ let placementMode = false;
 let videoDuration = 60;
 let editorHandlersBound = false;
 let seekAfterRebuild: number | null = null;
+let globalTrigger: TriggerMode = 'click';
+let globalPauseOnInteract = true;
+let globalMarkerStyle: MarkerStyle = 'dot';
 
 // ──────────────────── Undo/Redo ────────────────────
 let undoStack: string[] = [];
@@ -316,9 +319,9 @@ function rebuildViewer(skipSeekSave = false): void {
 
   viewer = new CIVideoHotspot(container, {
     src: videoSrc,
-    hotspots: hotspots.map(h => ({ ...h })),
-    trigger: 'click',
-    pauseOnInteract: mode === 'view',
+    hotspots: hotspots.map(h => ({ ...h, markerStyle: globalMarkerStyle })),
+    trigger: globalTrigger,
+    pauseOnInteract: globalPauseOnInteract,
     controls: true,
     hotspotNavigation: false,
     timelineIndicators: 'none',
@@ -668,6 +671,77 @@ function renderSidebar(): void {
   header.appendChild(addBtn);
   sidebar.appendChild(header);
 
+  // Global trigger toggle
+  const triggerBar = el('div', 'sidebar-trigger');
+  const triggerLabel = el('span', 'sidebar-trigger__label');
+  triggerLabel.textContent = 'Trigger';
+  const triggerToggle = el('div', 'sidebar-trigger__toggle');
+  const clickBtn = el('button', `sidebar-trigger__btn${globalTrigger === 'click' ? ' sidebar-trigger__btn--active' : ''}`);
+  clickBtn.textContent = 'Click';
+  clickBtn.addEventListener('click', () => {
+    if (globalTrigger === 'click') return;
+    globalTrigger = 'click';
+    rebuildViewer();
+    updateJsonOutput();
+  });
+  const hoverBtn = el('button', `sidebar-trigger__btn${globalTrigger === 'hover' ? ' sidebar-trigger__btn--active' : ''}`);
+  hoverBtn.textContent = 'Hover';
+  hoverBtn.addEventListener('click', () => {
+    if (globalTrigger === 'hover') return;
+    globalTrigger = 'hover';
+    rebuildViewer();
+    updateJsonOutput();
+  });
+  triggerToggle.append(clickBtn, hoverBtn);
+  triggerBar.append(triggerLabel, triggerToggle);
+  sidebar.appendChild(triggerBar);
+
+  // Global pause on interact
+  const pauseBar = el('div', 'sidebar-trigger');
+  const pauseLabel = el('span', 'sidebar-trigger__label');
+  pauseLabel.textContent = 'Pause on Interact';
+  const pauseToggle = el('div', 'sidebar-trigger__toggle');
+  const onBtn = el('button', `sidebar-trigger__btn${globalPauseOnInteract ? ' sidebar-trigger__btn--active' : ''}`);
+  onBtn.textContent = 'On';
+  onBtn.addEventListener('click', () => {
+    if (globalPauseOnInteract) return;
+    globalPauseOnInteract = true;
+    rebuildViewer();
+    updateJsonOutput();
+  });
+  const offBtn = el('button', `sidebar-trigger__btn${!globalPauseOnInteract ? ' sidebar-trigger__btn--active' : ''}`);
+  offBtn.textContent = 'Off';
+  offBtn.addEventListener('click', () => {
+    if (!globalPauseOnInteract) return;
+    globalPauseOnInteract = false;
+    rebuildViewer();
+    updateJsonOutput();
+  });
+  pauseToggle.append(onBtn, offBtn);
+  pauseBar.append(pauseLabel, pauseToggle);
+  sidebar.appendChild(pauseBar);
+
+  // Global marker style
+  const markerOptions: MarkerStyle[] = ['dot', 'dot-label', 'numbered'];
+  const markerBar = el('div', 'sidebar-trigger');
+  const markerLabel = el('span', 'sidebar-trigger__label');
+  markerLabel.textContent = 'Marker';
+  const markerToggle = el('div', 'sidebar-trigger__toggle');
+  markerOptions.forEach(opt => {
+    const label = opt === 'dot-label' ? 'Label' : opt.charAt(0).toUpperCase() + opt.slice(1);
+    const btn = el('button', `sidebar-trigger__btn${globalMarkerStyle === opt ? ' sidebar-trigger__btn--active' : ''}`);
+    btn.textContent = label;
+    btn.addEventListener('click', () => {
+      if (globalMarkerStyle === opt) return;
+      globalMarkerStyle = opt;
+      rebuildViewer();
+      updateJsonOutput();
+    });
+    markerToggle.appendChild(btn);
+  });
+  markerBar.append(markerLabel, markerToggle);
+  sidebar.appendChild(markerBar);
+
   // List
   const list = el('div', 'sidebar-list');
   hotspots.forEach((h, hIdx) => {
@@ -755,6 +829,7 @@ function renderSidebar(): void {
         body.appendChild(row);
       });
 
+
       // Customize section
       const custHeader = el('div', 'customize-header');
       const custTitle = el('span', 'customize-title');
@@ -763,20 +838,6 @@ function renderSidebar(): void {
       body.appendChild(custHeader);
 
       const custGrid = el('div', 'customize-grid');
-
-      custGrid.appendChild(sidebarSelect('Marker', ['dot', 'dot-label', 'numbered'], h.markerStyle, 'dot', (v) => {
-        pushUndo();
-        h.markerStyle = v as MarkerStyle;
-        syncHotspot(h.id);
-        updateJsonOutput();
-      }));
-
-      custGrid.appendChild(sidebarSelect('Trigger', ['hover', 'click'], h.trigger, 'click', (v) => {
-        pushUndo();
-        h.trigger = v as TriggerMode;
-        syncHotspot(h.id);
-        updateJsonOutput();
-      }));
 
       custGrid.appendChild(sidebarSelect('Placement', ['top', 'bottom', 'left', 'right', 'auto'], h.placement, 'top', (v) => {
         pushUndo();

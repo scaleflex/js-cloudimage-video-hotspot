@@ -304,8 +304,12 @@ export class CIVideoHotspot implements CIVideoHotspotInstance {
 
     this.cleanups.push(addListener(document, 'click', (e) => {
       if (this.destroyed) return;
+      if (this.hotspotManager.getOpenPopovers().size === 0) return;
       const target = e.target as HTMLElement;
+      // Close if click is outside container, or inside container but not on a marker/popover
       if (!this.containerEl.contains(target)) {
+        this.closeAll();
+      } else if (!target.closest('.ci-video-hotspot-marker, .ci-video-hotspot-popover')) {
         this.closeAll();
       }
     }));
