@@ -46,10 +46,13 @@ export class Controls {
   private fullscreenBtn: HTMLButtonElement | null;
   private chapterBtn: HTMLButtonElement | null = null;
   private chapterDropdown: HTMLElement | null = null;
+  private speedDropdown: HTMLElement | null = null;
+  private pendingSpeed: number | null = null;
   readonly progressBar: ProgressBar;
   private cleanups: (() => void)[] = [];
   private options: ControlsOptions;
   private idleTimer: ReturnType<typeof setTimeout> | undefined;
+  private static readonly SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 2];
 
   constructor(options: ControlsOptions) {
     this.options = options;
@@ -141,12 +144,19 @@ export class Controls {
     }
 
     // Speed
+    const speedWrapper = createElement('div', 'ci-video-hotspot-controls-speed');
     this.speedBtn = createElement('button', 'ci-video-hotspot-controls-speed-btn', {
       'aria-label': 'Playback speed',
+      'aria-expanded': 'false',
       'type': 'button',
     });
     this.speedBtn.textContent = '1x';
-    rightGroup.appendChild(this.speedBtn);
+    speedWrapper.appendChild(this.speedBtn);
+
+    this.speedDropdown = createElement('div', 'ci-video-hotspot-speed-dropdown');
+    this.speedDropdown.setAttribute('role', 'listbox');
+    speedWrapper.appendChild(this.speedDropdown);
+    rightGroup.appendChild(speedWrapper);
 
     // Fullscreen
     if (options.showFullscreen) {
@@ -188,14 +198,29 @@ export class Controls {
       this.options.onVolumeChange(parseFloat(this.volumeSlider.value));
     }));
 
-    // Speed toggle
-    const speeds = [0.5, 0.75, 1, 1.25, 1.5, 2];
+    // Speed dropdown toggle
     this.cleanups.push(addListener(this.speedBtn, 'click', (e) => {
       e.stopPropagation();
-      const current = this.options.getPlaybackRate();
-      const idx = speeds.indexOf(current);
-      const next = speeds[(idx + 1) % speeds.length];
-      this.options.onSpeedChange(next);
+      const isOpen = this.speedDropdown!.classList.contains('ci-video-hotspot-speed-dropdown--open');
+      this.closeAllDropdowns();
+      if (!isOpen) {
+        this.rebuildSpeedDropdown(this.options.getPlaybackRate());
+        addClass(this.speedDropdown!, 'ci-video-hotspot-speed-dropdown--open');
+        this.speedBtn.setAttribute('aria-expanded', 'true');
+      }
+    }));
+
+    // Speed item clicks (delegated)
+    this.cleanups.push(addListener(this.speedDropdown!, 'click', (e) => {
+      const target = (e.target as HTMLElement).closest('[data-speed]') as HTMLElement;
+      if (target) {
+        e.stopPropagation();
+        const speed = parseFloat(target.dataset.speed!);
+        this.pendingSpeed = speed;
+        this.speedBtn.textContent = `${speed}x`;
+        this.options.onSpeedChange(speed);
+        this.closeAllDropdowns();
+      }
     }));
 
     // Fullscreen
@@ -206,15 +231,18 @@ export class Controls {
       }));
     }
 
+    // Click outside closes all dropdowns
+    const onDocClick = () => this.closeAllDropdowns();
+    document.addEventListener('click', onDocClick);
+    this.cleanups.push(() => document.removeEventListener('click', onDocClick));
+
     // Chapter toggle
     if (this.chapterBtn && this.chapterDropdown) {
       this.cleanups.push(addListener(this.chapterBtn, 'click', (e) => {
         e.stopPropagation();
         const isOpen = this.chapterDropdown!.classList.contains('ci-video-hotspot-chapters--open');
-        if (isOpen) {
-          removeClass(this.chapterDropdown!, 'ci-video-hotspot-chapters--open');
-          this.chapterBtn!.setAttribute('aria-expanded', 'false');
-        } else {
+        this.closeAllDropdowns();
+        if (!isOpen) {
           addClass(this.chapterDropdown!, 'ci-video-hotspot-chapters--open');
           this.chapterBtn!.setAttribute('aria-expanded', 'true');
         }
@@ -233,6 +261,37 @@ export class Controls {
           }
         }
       }));
+    }
+  }
+
+  private closeAllDropdowns(): void {
+    if (this.speedDropdown) {
+      removeClass(this.speedDropdown, 'ci-video-hotspot-speed-dropdown--open');
+      this.speedBtn.setAttribute('aria-expanded', 'false');
+    }
+    if (this.chapterDropdown && this.chapterBtn) {
+      removeClass(this.chapterDropdown, 'ci-video-hotspot-chapters--open');
+      this.chapterBtn.setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  private rebuildSpeedDropdown(currentSpeed: number): void {
+    if (!this.speedDropdown) return;
+    this.speedDropdown.innerHTML = '';
+
+    const rate = Math.round(currentSpeed * 100) / 100;
+
+    for (const speed of Controls.SPEEDS) {
+      const item = createElement('button', 'ci-video-hotspot-speed-item', {
+        'role': 'option',
+        'data-speed': String(speed),
+        'type': 'button',
+      });
+      item.textContent = `${speed}x`;
+      if (Math.round(speed * 100) === Math.round(rate * 100)) {
+        addClass(item, 'ci-video-hotspot-speed-item--active');
+      }
+      this.speedDropdown.appendChild(item);
     }
   }
 
@@ -259,8 +318,12 @@ export class Controls {
       this.volumeSlider.value = String(this.options.getVolume());
     }
 
-    // Speed
-    this.speedBtn.textContent = `${rate}x`;
+    // Speed — use pending value until adapter catches up
+    const displayRate = this.pendingSpeed ?? rate;
+    if (this.pendingSpeed !== null && Math.round(rate * 100) === Math.round(this.pendingSpeed * 100)) {
+      this.pendingSpeed = null;
+    }
+    this.speedBtn.textContent = `${displayRate}x`;
 
     // Fullscreen
     if (this.fullscreenBtn) {

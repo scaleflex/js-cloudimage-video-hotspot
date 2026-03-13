@@ -360,30 +360,37 @@
   transform: translateY(0);
 }
 
-/* === Popover Arrow === */
+/* === Popover Arrow (triangle) === */
 .ci-video-hotspot-popover-arrow {
   position: absolute;
   width: calc(var(--ci-video-hotspot-arrow-size) * 2);
-  height: calc(var(--ci-video-hotspot-arrow-size) * 2);
+  height: var(--ci-video-hotspot-arrow-size);
   background: var(--ci-video-hotspot-arrow-color);
-  transform: rotate(45deg);
   pointer-events: none;
 }
 
 .ci-video-hotspot-popover[data-placement="top"] .ci-video-hotspot-popover-arrow {
   bottom: calc(var(--ci-video-hotspot-arrow-size) * -1);
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
 }
 
 .ci-video-hotspot-popover[data-placement="bottom"] .ci-video-hotspot-popover-arrow {
   top: calc(var(--ci-video-hotspot-arrow-size) * -1);
+  clip-path: polygon(50% 0, 0 100%, 100% 100%);
 }
 
 .ci-video-hotspot-popover[data-placement="left"] .ci-video-hotspot-popover-arrow {
   right: calc(var(--ci-video-hotspot-arrow-size) * -1);
+  width: var(--ci-video-hotspot-arrow-size);
+  height: calc(var(--ci-video-hotspot-arrow-size) * 2);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
 
 .ci-video-hotspot-popover[data-placement="right"] .ci-video-hotspot-popover-arrow {
   left: calc(var(--ci-video-hotspot-arrow-size) * -1);
+  width: var(--ci-video-hotspot-arrow-size);
+  height: calc(var(--ci-video-hotspot-arrow-size) * 2);
+  clip-path: polygon(100% 0, 0 50%, 100% 100%);
 }
 
 /* === Popover Close Button === */
@@ -637,18 +644,71 @@
   opacity: 0.9;
 }
 
-/* Speed button */
-.ci-video-hotspot-controls-speed-btn {
-  width: auto !important;
-  padding: 0 8px !important;
+/* Speed control */
+.ci-video-hotspot-controls-speed {
+  position: relative;
+}
+
+.ci-video-hotspot-controls .ci-video-hotspot-controls-speed-btn {
+  width: auto;
+  padding: 0 8px;
   font-size: 13px;
   font-weight: 600;
 }
 
+/* Speed dropdown */
+.ci-video-hotspot-speed-dropdown {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: -45px;
+  display: flex;
+  gap: 6px;
+  border-radius: 12px;
+  padding: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease, transform 200ms ease;
+  transform: translateY(8px);
+  z-index: 20;
+}
+
+.ci-video-hotspot-speed-dropdown--open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.ci-video-hotspot-speed-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 14px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  white-space: nowrap;
+  border-radius: 50px;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.ci-video-hotspot-speed-item:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px
+}
+
+.ci-video-hotspot-speed-item--active {
+  color: #fff;
+  font-weight: 700;
+}
+
 /* Chapter button */
-.ci-video-hotspot-controls-chapter-btn {
-  width: auto !important;
-  padding: 0 8px !important;
+.ci-video-hotspot-controls .ci-video-hotspot-controls-chapter-btn {
+  width: auto;
+  padding: 0 8px;
   font-size: 13px;
 }
 
