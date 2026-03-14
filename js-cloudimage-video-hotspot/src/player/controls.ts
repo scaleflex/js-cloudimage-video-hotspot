@@ -12,6 +12,7 @@ const VOLUME_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 const VOLUME_MUTE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11,5 6,9 2,9 2,15 6,15 11,19"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>';
 const FULLSCREEN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg>';
 const FULLSCREEN_EXIT_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" x2="21" y1="10" y2="3"/><line x1="3" x2="10" y1="21" y2="14"/></svg>';
+const REPEAT_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>';
 
 export interface ControlsOptions {
   onPlay: () => void;
@@ -21,6 +22,8 @@ export interface ControlsOptions {
   onMuteToggle: () => void;
   onFullscreenToggle: () => void;
   onSpeedChange: (rate: number) => void;
+  onLoopToggle: () => void;
+  isLooping: () => boolean;
   getDuration: () => number;
   getCurrentTime: () => number;
   getBufferedEnd: () => number;
@@ -43,6 +46,7 @@ export class Controls {
   private volumeBtn: HTMLButtonElement;
   private volumeSlider: HTMLInputElement;
   private speedBtn: HTMLButtonElement;
+  private loopBtn: HTMLButtonElement;
   private fullscreenBtn: HTMLButtonElement | null;
   private chapterBtn: HTMLButtonElement | null = null;
   private chapterDropdown: HTMLElement | null = null;
@@ -158,6 +162,17 @@ export class Controls {
     speedWrapper.appendChild(this.speedDropdown);
     rightGroup.appendChild(speedWrapper);
 
+    // Loop/Repeat
+    this.loopBtn = createElement('button', 'ci-video-hotspot-controls-loop-btn', {
+      'aria-label': 'Toggle repeat',
+      'type': 'button',
+    });
+    this.loopBtn.innerHTML = REPEAT_SVG;
+    if (options.isLooping()) {
+      addClass(this.loopBtn, 'ci-video-hotspot-controls-loop-btn--active');
+    }
+    rightGroup.appendChild(this.loopBtn);
+
     // Fullscreen
     if (options.showFullscreen) {
       this.fullscreenBtn = createElement('button', 'ci-video-hotspot-controls-fullscreen-btn', {
@@ -220,6 +235,17 @@ export class Controls {
         this.speedBtn.textContent = `${speed}x`;
         this.options.onSpeedChange(speed);
         this.closeAllDropdowns();
+      }
+    }));
+
+    // Loop toggle
+    this.cleanups.push(addListener(this.loopBtn, 'click', (e) => {
+      e.stopPropagation();
+      this.options.onLoopToggle();
+      if (this.options.isLooping()) {
+        addClass(this.loopBtn, 'ci-video-hotspot-controls-loop-btn--active');
+      } else {
+        removeClass(this.loopBtn, 'ci-video-hotspot-controls-loop-btn--active');
       }
     }));
 

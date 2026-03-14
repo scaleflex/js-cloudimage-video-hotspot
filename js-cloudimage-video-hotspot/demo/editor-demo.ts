@@ -4,7 +4,7 @@ import type { VideoHotspotItem, Keyframe, MarkerStyle, TriggerMode, Placement, H
 let videoSrc = './Rest room.mp4';
 
 // Color palette for hotspots
-const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
+const COLORS = ['#3b82f6', '#10b981', '#8b5cf6', '#06b6d4', '#f97316', '#a855f7'];
 
 // ──────────────────── State ────────────────────
 type AppMode = 'view' | 'editor';
@@ -21,6 +21,7 @@ let seekAfterRebuild: number | null = null;
 let globalTrigger: TriggerMode = 'click';
 let globalPauseOnInteract = true;
 let globalMarkerStyle: MarkerStyle = 'dot';
+let editorMarkerObserver: MutationObserver | null = null;
 
 // ──────────────────── Undo/Redo ────────────────────
 let undoStack: string[] = [];
@@ -323,10 +324,25 @@ function rebuildViewer(skipSeekSave = false): void {
     trigger: globalTrigger,
     pauseOnInteract: globalPauseOnInteract,
     controls: true,
+    clickToPlay: mode !== 'editor',
     hotspotNavigation: false,
     timelineIndicators: 'none',
     onTimeUpdate: () => {
       updateMarkerVisibility();
+    },
+    onPlay: () => {
+      // Watch for new markers added by RAF render loop — hide non-selected in editor mode
+      if (mode === 'editor' && selectedHotspotId) {
+        const markersEl = document.querySelector('.ci-video-hotspot-markers');
+        if (markersEl && !editorMarkerObserver) {
+          editorMarkerObserver = new MutationObserver(() => updateMarkerVisibility());
+          editorMarkerObserver.observe(markersEl, { childList: true });
+        }
+      }
+    },
+    onPause: () => {
+      editorMarkerObserver?.disconnect();
+      editorMarkerObserver = null;
     },
     onReady: () => {
       videoDuration = viewer?.getDuration() || 60;
@@ -366,9 +382,6 @@ function setupEditorHandlers(): void {
       e.stopPropagation();
     }
   }, true);
-
-  // Double-click to create hotspot
-  videoArea.addEventListener('dblclick', handleVideoDoubleClick);
 
   // Click in placement mode
   videoArea.addEventListener('click', handleVideoClick);
@@ -563,7 +576,7 @@ function syncHotspot(id: string): void {
 function createHotspotAtPosition(x: number, y: number): void {
   pushUndo();
   const currentTime = Math.round((viewer?.getCurrentTime() ?? 0) * 10) / 10;
-  const endTime = Math.round((currentTime + 10) * 10) / 10;
+  const endTime = Math.round(Math.min(currentTime + 10, videoDuration) * 10) / 10;
   const id = `hotspot-${nextId++}`;
   const xStr = `${x}%`;
   const yStr = `${y}%`;
@@ -584,12 +597,9 @@ function createHotspotAtPosition(x: number, y: number): void {
   };
 
   hotspots.push(newHotspot);
-  selectedHotspotId = id;
-  selectedPointIndex = 0;
+  viewer?.pause();
   viewer?.addHotspot({ ...newHotspot });
-  updateMarkerVisibility();
-  renderSidebar();
-  renderTimeline();
+  selectPoint(id, 0);
   updateJsonOutput();
 }
 
@@ -671,76 +681,74 @@ function renderSidebar(): void {
   header.appendChild(addBtn);
   sidebar.appendChild(header);
 
-  // Global trigger toggle
-  const triggerBar = el('div', 'sidebar-trigger');
-  const triggerLabel = el('span', 'sidebar-trigger__label');
+  // Global settings panel
+  const settingsPanel = el('div', 'sidebar-settings');
+
+  // Trigger
+  const triggerRow = el('div', 'sidebar-setting__row');
+  const triggerLabel = el('span', 'sidebar-setting__label');
   triggerLabel.textContent = 'Trigger';
-  const triggerToggle = el('div', 'sidebar-trigger__toggle');
-  const clickBtn = el('button', `sidebar-trigger__btn${globalTrigger === 'click' ? ' sidebar-trigger__btn--active' : ''}`);
-  clickBtn.textContent = 'Click';
-  clickBtn.addEventListener('click', () => {
-    if (globalTrigger === 'click') return;
-    globalTrigger = 'click';
+  const triggerSelect = document.createElement('select') as HTMLSelectElement;
+  triggerSelect.className = 'sidebar-setting__select';
+  for (const opt of ['click', 'hover'] as const) {
+    const o = document.createElement('option');
+    o.value = opt;
+    o.textContent = opt.charAt(0).toUpperCase() + opt.slice(1);
+    if (globalTrigger === opt) o.selected = true;
+    triggerSelect.appendChild(o);
+  }
+  triggerSelect.addEventListener('change', () => {
+    globalTrigger = triggerSelect.value as TriggerMode;
     rebuildViewer();
     updateJsonOutput();
   });
-  const hoverBtn = el('button', `sidebar-trigger__btn${globalTrigger === 'hover' ? ' sidebar-trigger__btn--active' : ''}`);
-  hoverBtn.textContent = 'Hover';
-  hoverBtn.addEventListener('click', () => {
-    if (globalTrigger === 'hover') return;
-    globalTrigger = 'hover';
-    rebuildViewer();
-    updateJsonOutput();
-  });
-  triggerToggle.append(clickBtn, hoverBtn);
-  triggerBar.append(triggerLabel, triggerToggle);
-  sidebar.appendChild(triggerBar);
+  triggerRow.append(triggerLabel, triggerSelect);
+  settingsPanel.appendChild(triggerRow);
 
-  // Global pause on interact
-  const pauseBar = el('div', 'sidebar-trigger');
-  const pauseLabel = el('span', 'sidebar-trigger__label');
+  // Pause on Interact
+  const pauseRow = el('div', 'sidebar-setting__row');
+  const pauseLabel = el('span', 'sidebar-setting__label');
   pauseLabel.textContent = 'Pause on Interact';
-  const pauseToggle = el('div', 'sidebar-trigger__toggle');
-  const onBtn = el('button', `sidebar-trigger__btn${globalPauseOnInteract ? ' sidebar-trigger__btn--active' : ''}`);
-  onBtn.textContent = 'On';
-  onBtn.addEventListener('click', () => {
-    if (globalPauseOnInteract) return;
-    globalPauseOnInteract = true;
+  const pauseSelect = document.createElement('select') as HTMLSelectElement;
+  pauseSelect.className = 'sidebar-setting__select';
+  for (const opt of [{ value: 'true', label: 'On' }, { value: 'false', label: 'Off' }]) {
+    const o = document.createElement('option');
+    o.value = opt.value;
+    o.textContent = opt.label;
+    if (String(globalPauseOnInteract) === opt.value) o.selected = true;
+    pauseSelect.appendChild(o);
+  }
+  pauseSelect.addEventListener('change', () => {
+    globalPauseOnInteract = pauseSelect.value === 'true';
     rebuildViewer();
     updateJsonOutput();
   });
-  const offBtn = el('button', `sidebar-trigger__btn${!globalPauseOnInteract ? ' sidebar-trigger__btn--active' : ''}`);
-  offBtn.textContent = 'Off';
-  offBtn.addEventListener('click', () => {
-    if (!globalPauseOnInteract) return;
-    globalPauseOnInteract = false;
-    rebuildViewer();
-    updateJsonOutput();
-  });
-  pauseToggle.append(onBtn, offBtn);
-  pauseBar.append(pauseLabel, pauseToggle);
-  sidebar.appendChild(pauseBar);
+  pauseRow.append(pauseLabel, pauseSelect);
+  settingsPanel.appendChild(pauseRow);
 
-  // Global marker style
+  // Marker
   const markerOptions: MarkerStyle[] = ['dot', 'dot-label', 'numbered'];
-  const markerBar = el('div', 'sidebar-trigger');
-  const markerLabel = el('span', 'sidebar-trigger__label');
+  const markerRow = el('div', 'sidebar-setting__row');
+  const markerLabel = el('span', 'sidebar-setting__label');
   markerLabel.textContent = 'Marker';
-  const markerToggle = el('div', 'sidebar-trigger__toggle');
-  markerOptions.forEach(opt => {
-    const label = opt === 'dot-label' ? 'Label' : opt.charAt(0).toUpperCase() + opt.slice(1);
-    const btn = el('button', `sidebar-trigger__btn${globalMarkerStyle === opt ? ' sidebar-trigger__btn--active' : ''}`);
-    btn.textContent = label;
-    btn.addEventListener('click', () => {
-      if (globalMarkerStyle === opt) return;
-      globalMarkerStyle = opt;
-      rebuildViewer();
-      updateJsonOutput();
-    });
-    markerToggle.appendChild(btn);
+  const markerSelect = document.createElement('select') as HTMLSelectElement;
+  markerSelect.className = 'sidebar-setting__select';
+  for (const opt of markerOptions) {
+    const o = document.createElement('option');
+    o.value = opt;
+    o.textContent = opt === 'dot-label' ? 'Label' : opt.charAt(0).toUpperCase() + opt.slice(1);
+    if (globalMarkerStyle === opt) o.selected = true;
+    markerSelect.appendChild(o);
+  }
+  markerSelect.addEventListener('change', () => {
+    globalMarkerStyle = markerSelect.value as MarkerStyle;
+    rebuildViewer();
+    updateJsonOutput();
   });
-  markerBar.append(markerLabel, markerToggle);
-  sidebar.appendChild(markerBar);
+  markerRow.append(markerLabel, markerSelect);
+  settingsPanel.appendChild(markerRow);
+
+  sidebar.appendChild(settingsPanel);
 
   // List
   const list = el('div', 'sidebar-list');
@@ -769,7 +777,7 @@ function renderSidebar(): void {
     const time = el('span', 'hotspot-item-time');
     time.textContent = `${fmtTime(h.startTime)} – ${fmtTime(h.endTime)}`;
     const chevron = el('span', 'hotspot-item-chevron');
-    chevron.textContent = '\u25B8';
+    chevron.textContent = '\u25BE';
 
     hdr.append(colorDot, name, time, chevron);
     item.appendChild(hdr);
@@ -814,19 +822,23 @@ function renderSidebar(): void {
         });
 
         if (isPointSelected) {
-          // Inline editable fields between label and delete button
-          const fields = el('div', 'point-row-fields');
-          fields.appendChild(inlineField('T', kf.time, (v) => updateKeyframe(h.id, kfIdx, 'time', v)));
-          fields.appendChild(inlineField('X', parseCoord(kf.x), (v) => updateKeyframe(h.id, kfIdx, 'x', v)));
-          fields.appendChild(inlineField('Y', parseCoord(kf.y), (v) => updateKeyframe(h.id, kfIdx, 'y', v)));
-          row.append(label, fields, delPointBtn);
+          // Time field on the main row
+          const timeField = el('div', 'point-row-fields');
+          timeField.appendChild(inlineTimeField('Time', kf.time, (v) => updateKeyframe(h.id, kfIdx, 'time', v)));
+          row.append(label, timeField, delPointBtn);
+
+          // X/Y fields on a second line inside the same row
+          const coordRow = el('div', 'point-row-coords');
+          coordRow.appendChild(inlineField('X', parseCoord(kf.x), (v) => updateKeyframe(h.id, kfIdx, 'x', v)));
+          coordRow.appendChild(inlineField('Y', parseCoord(kf.y), (v) => updateKeyframe(h.id, kfIdx, 'y', v)));
+          row.appendChild(coordRow);
+          body.appendChild(row);
         } else {
           const info = el('span', 'point-row-info');
-          info.textContent = `${fmtTime(kf.time)}  (${parseCoord(kf.x)}%, ${parseCoord(kf.y)}%)`;
+          info.textContent = fmtTime(kf.time);
           row.append(label, info, delPointBtn);
+          body.appendChild(row);
         }
-
-        body.appendChild(row);
       });
 
 
@@ -909,6 +921,36 @@ function inlineField(label: string, value: number, onChange: (v: number) => void
   input.addEventListener('change', () => {
     const v = parseFloat(input.value);
     if (!isNaN(v)) onChange(v);
+  });
+  wrap.append(lbl, input);
+  return wrap;
+}
+
+function parseTime(str: string): number | null {
+  const match = str.match(/^(\d+):(\d{1,2})(?:\.(\d{1,3}))?$/);
+  if (!match) return null;
+  const m = parseInt(match[1], 10);
+  const s = parseInt(match[2], 10);
+  const ms = match[3] ? parseInt(match[3].padEnd(3, '0'), 10) : 0;
+  if (s >= 60) return null;
+  return m * 60 + s + ms / 1000;
+}
+
+function inlineTimeField(label: string, value: number, onChange: (v: number) => void): HTMLElement {
+  const wrap = el('div', 'point-row-field');
+  const lbl = el('span', 'point-row-field-label');
+  lbl.textContent = label;
+  const input = el('input', 'point-row-field-input') as HTMLInputElement;
+  input.type = 'text';
+  input.value = fmtTime(value);
+  input.addEventListener('click', (e) => e.stopPropagation());
+  input.addEventListener('change', () => {
+    const v = parseTime(input.value);
+    if (v !== null) {
+      onChange(v);
+    } else {
+      input.value = fmtTime(value);
+    }
   });
   wrap.append(lbl, input);
   return wrap;
@@ -1280,7 +1322,8 @@ function el(tag: string, className?: string): HTMLElement {
 function fmtTime(seconds: number): string {
   const m = Math.floor(seconds / 60);
   const s = Math.floor(seconds % 60);
-  return `${m}:${s.toString().padStart(2, '0')}`;
+  const ms = Math.round((seconds % 1) * 1000);
+  return `${m}:${s.toString().padStart(2, '0')}.${ms.toString().padStart(3, '0')}`;
 }
 
 function parseCoord(v: string | number): number {
@@ -1347,19 +1390,20 @@ function setupKeyboardShortcuts(): void {
         }
         break;
 
-      case ' ':
-        e.preventDefault();
-        if (viewer) {
-          const video = document.querySelector('.ci-video-hotspot-video') as HTMLVideoElement;
-          if (video && !video.paused) {
-            viewer.pause();
-          } else {
-            viewer.play();
-          }
-        }
-        break;
     }
   });
+
+  // Space handler in capture phase — fires before the plugin's keyboard handler
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== ' ') return;
+    const tag = (e.target as HTMLElement).tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (viewer) {
+      viewer.togglePlay();
+    }
+  }, true);
 }
 
 // ──────────────────── Start ────────────────────

@@ -44,6 +44,7 @@ export class CIVideoHotspot implements CIVideoHotspotInstance {
   private emitAnalytics: AnalyticsEmit;
   private cleanups: (() => void)[] = [];
   private destroyed = false;
+  private looping = true;
   private videoAspectRatio = 16 / 9;
   private resizeObserver: ResizeObserver | null = null;
 
@@ -171,6 +172,13 @@ export class CIVideoHotspot implements CIVideoHotspotInstance {
       onPlaying: () => {
         removeClass(this.containerEl, 'ci-video-hotspot-container--loading');
       },
+
+      onEnded: () => {
+        this.seek(0);
+        if (this.looping) {
+          this.play();
+        }
+      },
     });
 
     // Mount video element into wrapper, before the markers layer
@@ -215,6 +223,8 @@ export class CIVideoHotspot implements CIVideoHotspotInstance {
       onMuteToggle: () => this.setMuted(!this.isMuted()),
       onFullscreenToggle: () => this.fullscreenControl?.toggle(),
       onSpeedChange: (r) => this.setPlaybackRate(r),
+      onLoopToggle: () => { this.looping = !this.looping; },
+      isLooping: () => this.looping,
       getDuration: () => this.getDuration(),
       getCurrentTime: () => this.getCurrentTime(),
       getBufferedEnd: () => this.player.getBufferedEnd(),
@@ -291,7 +301,9 @@ export class CIVideoHotspot implements CIVideoHotspotInstance {
           this.controls.startIdleTimer();
         }
       }
-      this.togglePlay();
+      if (this.config.clickToPlay !== false) {
+        this.togglePlay();
+      }
     }));
 
     this.cleanups.push(addListener(this.containerEl, 'mousemove', () => {
