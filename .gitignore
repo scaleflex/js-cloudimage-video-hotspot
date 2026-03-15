@@ -26,4 +26,5 @@ src/**/*.d.ts.map
 # Experimental packages
 packages/
 
-.ideapackage-lock.json
+.idea
+package-lock.json
