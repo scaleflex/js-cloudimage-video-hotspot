@@ -1,14 +1,10 @@
-import { useRef } from 'react';
 import { CIVideoHotspotViewer } from 'js-cloudimage-video-hotspot/react';
 
 export default function App() {
-  const viewerRef = useRef(null);
-
   return (
     <div style={{ maxWidth: 800, margin: '40px auto' }}>
       <h1>React Example</h1>
       <CIVideoHotspotViewer
-        ref={viewerRef}
         src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
         trigger="click"
         pauseOnInteract
@@ -31,11 +27,6 @@ export default function App() {
           console.log('Clicked:', hotspot.id);
         }}
       />
-      <div style={{ marginTop: 16 }}>
-        <button onClick={() => viewerRef.current?.play()}>Play</button>
-        <button onClick={() => viewerRef.current?.pause()}>Pause</button>
-        <button onClick={() => viewerRef.current?.nextHotspot()}>Next Hotspot</button>
-      </div>
     </div>
   );
 }
